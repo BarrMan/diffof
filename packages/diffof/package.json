@@ -10,5 +10,9 @@
   "license": "ISC",
   "bin": {
     "diffof": "./cli.js"
+  },
+  "dependencies": {
+    "@barrman/diffof-client": "^2.0.7",
+    "@barrman/diffof-server": "^2.0.7"
   }
 }
