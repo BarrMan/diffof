@@ -1,6 +1,6 @@
 {
   "name": "@barrman/diffof-client",
-  "version": "2.0.5",
+  "version": "2.0.7",
   "description": "",
   "main": "index.js",
   "scripts": {
