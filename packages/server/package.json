@@ -1,5 +1,5 @@
 {
-  "name": "@naturalint/diffof-server",
+  "name": "@barrman/diffof-server",
   "version": "1.0.0",
   "description": "",
   "main": "dist/server.js",
