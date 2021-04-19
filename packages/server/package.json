@@ -11,5 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "@naturalint/diffof-common": "^1.0.0"
-  }
+  },
+  "gitHead": "9df37e9898857f674b2600c685565e7d582bab4d"
 }
