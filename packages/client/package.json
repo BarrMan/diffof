@@ -11,5 +11,8 @@
   "dependencies": {
     "@barrman/diffof-common": "^1.0.0"
   },
-  "gitHead": "26aa70cf6ddb1bea193f684700733904e8a37727"
+  "gitHead": "bc8b3ed691a92fc93dabe0e6161040b7980c68a5",
+  "publishConfig": {
+    "access": "public"
+  }
 }
