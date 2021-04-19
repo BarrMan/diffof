@@ -11,5 +11,8 @@
   "gitHead": "bc8b3ed691a92fc93dabe0e6161040b7980c68a5",
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "diffof": "^1.0.0"
   }
 }
