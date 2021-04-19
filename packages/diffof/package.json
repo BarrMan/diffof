@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "bin": {
-    "diffof": "echo hello from diffof"
+    "diffof": "./cli.js"
   }
 }
