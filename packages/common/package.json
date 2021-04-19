@@ -1,6 +1,6 @@
 {
   "name": "@barrman/diffof-common",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,6 +13,6 @@
     "access": "public"
   },
   "dependencies": {
-    "diffof": "^1.0.0"
+    "diffof": "^2.0.3"
   }
 }

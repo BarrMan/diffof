@@ -1,6 +1,6 @@
 {
   "name": "@barrman/diffof-server",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "",
   "main": "dist/server.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@barrman/diffof-common": "^1.0.0",
-    "diffof": "^1.0.0"
+    "diffof": "^2.0.3"
   },
   "gitHead": "bc8b3ed691a92fc93dabe0e6161040b7980c68a5",
   "publishConfig": {
