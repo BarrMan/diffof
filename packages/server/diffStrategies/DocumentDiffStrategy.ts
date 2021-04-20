@@ -19,24 +19,22 @@ export default class DocumentDiffStrategy implements DiffStrategy<DocumentType, 
         }));
     };
 
-    getDiffs = (diffStates: IDiffState<DocumentType>[]): [IDiffInfo, IDiffInfo][] => {
+    getDiffs = (diffStates: IDiffState<DocumentType>[]): IDiffInfo[] => {
         const diffs = diffStates.map(diffState => {
             return this.evaluateDocumentDiffs(diffState);
         });
+
         return diffs;
     };
 
-    private evaluateDocumentDiffs = (diffState: IDiffState<DocumentType>): [IDiffInfo, IDiffInfo] => {
-        const prevDiff = new DiffInfoBuilder();
-        const nextDiff = new DiffInfoBuilder();
+    private evaluateDocumentDiffs = (diffState: IDiffState<DocumentType>): IDiffInfo => {
+        const diff = new DiffInfoBuilder();
 
-        prevDiff.addLine().addPhrase(new Phrase('{'));
-        nextDiff.addLine().addPhrase(new Phrase('{'));
+        diff.addLine().addPhrase(new Phrase('{'));
 
-        prevDiff.addLine(DiffKind.ADDED).addPhrase(new Phrase(PhraseSymbol.TAB)).addPhrase(new Phrase('someProperty: "someValue",'));
-        nextDiff.addLine(DiffKind.REMOVED).addPhrase(new Phrase(PhraseSymbol.TAB)).addPhrase(new Phrase('differentProperty: "someValue",'));
+        diff.addLine(DiffKind.REMOVED).addPhrase(new Phrase(PhraseSymbol.TAB)).addPhrase(new Phrase('differentProperty: "someValue",'));
 
-        return [prevDiff, nextDiff]
+        return diff;
     }
 
     fileMask = 'json';

@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import DiffInfo from "../interfaces/IDiffInfo";
 import IDiffState from "../interfaces/IDiffState";
 
@@ -8,5 +6,5 @@ export default interface DiffStrategy<FileFormatType, DiffInfoExtension extends 
 
     getDiffPairs: (prev: FileFormatType[], next: FileFormatType[], diffOptions: DiffOptions) => IDiffState<FileFormatType>[];
 
-    getDiffs: (diffStates: IDiffState<FileFormatType>[]) => [DiffInfoExtension, DiffInfoExtension][];
+    getDiffs: (diffStates: IDiffState<FileFormatType>[]) => DiffInfoExtension[];
 }
