@@ -1,6 +1,6 @@
 {
   "name": "@barrman/diffof-client",
-  "version": "2.0.15",
+  "version": "2.0.17",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@barrman/diffof-common": "^2.0.15",
+    "@barrman/diffof-common": "^2.0.17",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-jss": "^10.6.0",
