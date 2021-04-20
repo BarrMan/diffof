@@ -1,5 +1,5 @@
 import DiffKind from "./DiffKind";
-import { PhraseSymbol } from "@barrman/diffof-common";
+import { PhraseSymbol } from "@barrman/diffof-common/dist";
 
 export default interface IDiffPhrase {
     diffKind?: DiffKind;
