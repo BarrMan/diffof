@@ -1,5 +1,4 @@
-import { Component } from 'react';
-import { DiffKind, PhraseSymbol } from '@barrman/diffof-common';
+import { DiffKind, PhraseSymbol } from '@barrman/diffof-common/dist/index';
 
 import styles from './DiffSection.styles';
 import { withStyles } from '../../Common/styles';
@@ -24,6 +23,8 @@ const DiffSection = ({ classes, docs, sectionType }) => {
     const renderPhrases = phrases => {
         return phrases.map(diffPhrase => {
             const phraseDiffClass = diffKindClasses[sectionType][diffPhrase.diffKind];
+            const ps = PhraseSymbol;
+            debugger;
             const phraseText = diffPhrase.phrase instanceof PhraseSymbol ? phraseSymbols[diffPhrase.phrase] : diffPhrase.phrase;
 
             return <div class={phraseDiffClass}>{phraseText}</div>
@@ -40,7 +41,7 @@ const DiffSection = ({ classes, docs, sectionType }) => {
                     return docDiff.diffLines.map(docLineDiff => {
                         const diffClass = diffKindClasses[sectionType][docLineDiff.diffKind];
 
-                        return <div class={diffClass}>{renderPhrases}</div>
+                        return <div class={diffClass}>{renderPhrases(docLineDiff.diffPhrases)}</div>
                     })
                 })}
             </div>
