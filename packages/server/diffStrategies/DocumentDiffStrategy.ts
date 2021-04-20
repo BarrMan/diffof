@@ -8,24 +8,25 @@ import IDiffState from '../interfaces/IDiffState';
 import PhraseSymbol from '../interfaces/PhraseSymbol';
 import DiffStrategy from './DiffStrategy';
 
-export default class DocumentDiffStrategy implements DiffStrategy<object, IDiffInfo, DocumentDiffOptions> {
-    getDiffPairs = (prevCollection: object[], nextCollection: object[], diffOptions: DocumentDiffOptions) => {
+type DocumentType = Record<string, unknown>;
+export default class DocumentDiffStrategy implements DiffStrategy<DocumentType, IDiffInfo, DocumentDiffOptions> {
+    getDiffPairs = (prevCollection: DocumentType[], nextCollection: DocumentType[], diffOptions: DocumentDiffOptions): IDiffState<DocumentType>[] => {
         const [prevHashes, nextHashes] = [keyBy(prevCollection, diffOptions.uniqueKey), keyBy(nextCollection, diffOptions.uniqueKey)];
-        
+
         return Object.entries(prevHashes).map(([key, value]) => ({
             prev: value,
             next: nextHashes[key],
         }));
     };
-    
-    getDiffs = (diffStates: IDiffState<object>[]): [IDiffInfo, IDiffInfo][] => {
+
+    getDiffs = (diffStates: IDiffState<DocumentType>[]): [IDiffInfo, IDiffInfo][] => {
         const diffs = diffStates.map(diffState => {
             return this.evaluateDocumentDiffs(diffState);
         });
         return diffs;
     };
 
-    private evaluateDocumentDiffs = (diffState: IDiffState<object>): [IDiffInfo, IDiffInfo] => {
+    private evaluateDocumentDiffs = (diffState: IDiffState<DocumentType>): [IDiffInfo, IDiffInfo] => {
         const prevDiff = new DiffInfoBuilder();
         const nextDiff = new DiffInfoBuilder();
 
@@ -39,5 +40,4 @@ export default class DocumentDiffStrategy implements DiffStrategy<object, IDiffI
     }
 
     fileMask = 'json';
-
 }

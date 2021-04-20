@@ -1,5 +1,4 @@
 /* eslint-disable no-restricted-globals */
-/* eslint-disable import/no-dynamic-require */
 import express, { Request, Response } from 'express';
 import DocumentDiffStrategy from './diffStrategies/DocumentDiffStrategy';
 

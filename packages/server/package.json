@@ -8,7 +8,8 @@
     "prestart": "npm run build",
     "start": "node dist/server.js",
     "build": "tsc",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "lint": "eslint . --ext .ts"
   },
   "author": "",
   "license": "ISC",
@@ -20,7 +21,10 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.11",
-    "@types/lodash": "^4.14.168"
+    "@types/lodash": "^4.14.168",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "eslint": "^7.24.0"
   },
   "gitHead": "bc8b3ed691a92fc93dabe0e6161040b7980c68a5",
   "publishConfig": {
