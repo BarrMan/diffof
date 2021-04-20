@@ -1,23 +1,52 @@
 import { Component } from 'react';
-import DiffKind from '@barrman/diffof-common';
+import { DiffKind, PhraseSymbol } from '@barrman/diffof-common';
 
 import styles from './DiffSection.styles';
 import { withStyles } from '../../Common/styles';
 
-class DiffSection extends Component {
-    render() {
-        const { classes, docs, sectionType } = this.props;
+const DiffSection = ({ classes, docs, sectionType }) => {
+    const phraseSymbols = {
+        [PhraseSymbol.TAB]: '&#9;',
+        [PhraseSymbol.SPACE]: '&nbsp;'
+    };
 
-        console.log('docs', docs);
-        console.log('sectionType', sectionType);
+    const diffKindClasses = {
+        [SectionType.CURRENT]: {
+            [DiffKind.ADDED]: 'added',
+            [DiffKind.REMOVED]: 'removed'
+        },
+        [SectionType.PREVIOUS]: {
+            [DiffKind.ADDED]: 'removed',
+            [DiffKind.REMOVED]: 'added'
+        }
+    };
 
-        return (
-            <div id="previous-run" className={classes.diffSection}>
-                <div id="previous-run-lines"></div>
-                <div id="previous-run-code">{sectionType}</div>
-            </div>
-        );
+    const renderPhrases = phrases => {
+        return phrases.map(diffPhrase => {
+            const phraseDiffClass = diffKindClasses[sectionType][diffPhrase.diffKind];
+            const phraseText = diffPhrase.phrase instanceof PhraseSymbol ? phraseSymbols[diffPhrase.phrase] : diffPhrase.phrase;
+
+            return <div class={phraseDiffClass}>{phraseText}</div>
+        });
     }
+
+    console.log('docs', docs);
+    console.log('sectionType', sectionType);
+
+    return (
+        <div id="previous-run" className={classes.diffSection}>
+            <div id="previous-run-lines">
+                {docs.map(docDiff => {
+                    return docDiff.diffLines.map(docLineDiff => {
+                        const diffClass = diffKindClasses[sectionType][docLineDiff.diffKind];
+
+                        return <div class={diffClass}>{renderPhrases}</div>
+                    })
+                })}
+            </div>
+            <div id="previous-run-code">{sectionType}</div>
+        </div>
+    );
 }
 
 export const SectionType = {
