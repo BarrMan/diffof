@@ -14,5 +14,6 @@
   "dependencies": {
     "@barrman/diffof-client": "^2.0.14",
     "@barrman/diffof-server": "^2.0.14"
-  }
+  },
+  "gitHead": "3655c75f1ae3e9c63114cb65ee33c149cec95b50"
 }
