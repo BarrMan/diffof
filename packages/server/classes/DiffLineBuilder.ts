@@ -7,7 +7,7 @@ export default class DiffLineBuilder implements IDiffLine {
     constructor(public diffKind?: DiffKind, public diffPhrases: IDiffPhrase[] = []) {
     }
 
-    addPhrase(phrase: IDiffPhrase): IDiffLine {
+    addPhrase(phrase: IDiffPhrase): DiffLineBuilder {
         if (phrase instanceof PhraseSymbol) {
             phrase.isSymbol = true;
         }
