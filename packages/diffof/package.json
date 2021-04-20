@@ -1,6 +1,6 @@
 {
   "name": "diffof",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "diffof": "./cli.js"
   },
   "dependencies": {
-    "@barrman/diffof-client": "^2.0.8",
-    "@barrman/diffof-server": "^2.0.8"
+    "@barrman/diffof-client": "^2.0.9",
+    "@barrman/diffof-server": "^2.0.9"
   }
 }
