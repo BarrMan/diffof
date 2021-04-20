@@ -1,6 +1,6 @@
 import DiffSection from '../DiffSection/DiffSection';
-import DiffKind from '../../../dist/interfaces/DiffKind';
-import PhraseSymbol from '../../../dist/interfaces/PhraseSymbol';
+// import DiffKind from '../../../dist/interfaces/DiffKind';
+// import PhraseSymbol from '../../../dist/interfaces/PhraseSymbol';
 
 const DiffSections = ({documentsDiffs = []}) => {
     const { prevDocs, nextDocs } = documentsDiffs.reduce((acc, documentPair) => {
