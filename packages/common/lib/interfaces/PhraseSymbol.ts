@@ -1,4 +1,4 @@
 export default class PhraseSymbol {
-    TAB = 0;
-    SPACE = 1;
+    static TAB = 0;
+    static SPACE = 1;
 }
