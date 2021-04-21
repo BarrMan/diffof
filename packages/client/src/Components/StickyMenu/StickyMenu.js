@@ -1,3 +1,4 @@
+import Header from '../Header/HeaderContainer';
 import FancyButton from '../FancyButton/FancyButton';
 
 const StickyMenu = ({ classes, loading, totalDocuments }) => (
@@ -10,8 +11,8 @@ const StickyMenu = ({ classes, loading, totalDocuments }) => (
                 <i className="fas fa-arrow-left"></i>
                 Previous documents
             </FancyButton>
-            {loading && <div className={classes.middleHeaderSection}>
-                <div className={classes.loader}></div>
+            {<div className={classes.middleHeaderSection}>
+                {loading ? <div className={classes.loader}></div> : <Header />}
             </div>}
             <div className={classes.documentsInfo}>Showing {totalDocuments}</div>
         </nav>

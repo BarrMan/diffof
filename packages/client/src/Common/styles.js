@@ -1,3 +1,5 @@
+import { useTheme } from 'react-jss';
+
 export const withClasses = (...classes) => {
     return classes.filter(className => typeof className === 'string').join(' ');
 };
@@ -7,7 +9,8 @@ export const mergeClassNames = (parentProps, className) => {
 };
 
 export const withStyles = Comp => stylesFn => props => {
-    const classes = stylesFn();
+    const theme = useTheme();
+    const classes = stylesFn(theme);
 
     return <Comp classes={classes} {...props} />
 }
