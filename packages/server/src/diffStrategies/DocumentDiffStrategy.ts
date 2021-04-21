@@ -5,7 +5,7 @@ import DiffKind from '../interfaces/DiffKind';
 
 import IDiffInfo from '../interfaces/IDiffInfo';
 import IDiffState from '../interfaces/IDiffState';
-import { PhraseSymbol } from '@barrman/diffof-common/dist';
+import { PhraseSymbol } from '@barrman/diffof-common';
 import DiffStrategy from './DiffStrategy';
 
 type DocumentType = Record<string, unknown>;
