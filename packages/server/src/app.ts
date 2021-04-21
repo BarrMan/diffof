@@ -2,10 +2,7 @@
 import express, { Request, Response } from 'express';
 import DocumentDiffStrategy from './diffStrategies/DocumentDiffStrategy';
 
-
 const app: express.Application = express();
-
-const port = 3001;
 
 app.use(express.json());
 
@@ -43,5 +40,4 @@ app.get('/diff', (req: Request, res: Response) => {
   res.json(data);
 });
 
-app.listen(port);
-console.log('app listening on port', port);
+export const Application = app;
