@@ -1,6 +1,5 @@
-import DiffKind from "../interfaces/DiffKind";
-import IDiffPhrase from "../interfaces/IDiffPhrase";
-import { PhraseSymbol } from "@barrman/diffof-common";
+import IDiffPhrase from "@barrman/diffof-common/src/interfaces/IDiffPhrase";
+import { PhraseSymbol, DiffKind } from "@barrman/diffof-common";
 
 type PhraseType = string | PhraseSymbol;
 

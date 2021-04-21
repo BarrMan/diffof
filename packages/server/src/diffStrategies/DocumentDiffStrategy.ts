@@ -1,11 +1,10 @@
 import { keyBy } from 'lodash';
 import DiffInfoBuilder from '../classes/DiffInfoBuilder';
-import Phrase from '../classes/Phrase';
 import DiffKind from '../interfaces/DiffKind';
 
 import IDiffInfo from '../interfaces/IDiffInfo';
 import IDiffState from '../interfaces/IDiffState';
-import { PhraseSymbol } from '@barrman/diffof-common';
+import { PhraseSymbol, StringPhrase } from '@barrman/diffof-common';
 import DiffStrategy from './DiffStrategy';
 
 type DocumentType = Record<string, unknown>;
@@ -30,9 +29,9 @@ export default class DocumentDiffStrategy implements DiffStrategy<DocumentType, 
     private evaluateDocumentDiffs = (diffState: IDiffState<DocumentType>): IDiffInfo => {
         const diff = new DiffInfoBuilder();
 
-        diff.addLine().addPhrase(new Phrase('{'));
+        diff.addLine().addPhrase(new StringPhrase('{'));
 
-        diff.addLine(DiffKind.REMOVED).addPhrase(new Phrase(PhraseSymbol.TAB)).addPhrase(new Phrase('differentProperty: "someValue",'));
+        diff.addLine(DiffKind.REMOVED).addPhrase(new PhraseSymbol(PhraseSymbol.TAB)).addPhrase(new StringPhrase('differentProperty: "someValue",'));
 
         return diff;
     }
