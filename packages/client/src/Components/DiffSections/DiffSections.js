@@ -1,6 +1,5 @@
-import DiffSection, { SectionType } from '../DiffSection/DiffSection';
-// import DiffKind from '../../../dist/interfaces/DiffKind';
-// import PhraseSymbol from '../../../dist/interfaces/PhraseSymbol';
+import DiffSection from '../DiffSection/DiffSectionContainer';
+import { SectionType } from '../DiffSection/DiffSection';
 
 const DiffSections = ({ documentsDiffs = [] }) => {
     return (<>

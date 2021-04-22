@@ -3,5 +3,7 @@ import IDiffPhrase from "./IDiffPhrase";
 import { PhraseSymbol } from "./PhraseSymbol";
 
 export class SymbolPhrase implements IDiffPhrase<PhraseSymbol> {
-    constructor(public phrase: PhraseSymbol, public diffKind?: DiffKind) { }
+    public isSymbol = true;
+
+    constructor(public phrase: number, public diffKind?: DiffKind) { }
 }

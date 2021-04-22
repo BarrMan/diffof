@@ -4,7 +4,7 @@ import DiffKind from '../interfaces/DiffKind';
 
 import IDiffInfo from '../interfaces/IDiffInfo';
 import IDiffState from '../interfaces/IDiffState';
-import { PhraseSymbol, StringPhrase } from '@barrman/diffof-common';
+import { SymbolPhrase, StringPhrase, PhraseSymbol } from '@barrman/diffof-common';
 import DiffStrategy from './DiffStrategy';
 
 type DocumentType = Record<string, unknown>;
@@ -31,7 +31,7 @@ export default class DocumentDiffStrategy implements DiffStrategy<DocumentType, 
 
         diff.addLine().addPhrase(new StringPhrase('{'));
 
-        diff.addLine(DiffKind.REMOVED).addPhrase(new PhraseSymbol(PhraseSymbol.TAB)).addPhrase(new StringPhrase('differentProperty: "someValue",'));
+        diff.addLine(DiffKind.REMOVED).addPhrase(new SymbolPhrase(PhraseSymbol.TAB)).addPhrase(new StringPhrase('differentProperty: "someValue",'));
 
         return diff;
     }

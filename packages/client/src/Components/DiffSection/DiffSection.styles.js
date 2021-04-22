@@ -4,7 +4,8 @@ import theme from '../../App.theme';
 const lineStyle = {
     borderBottom: '1px #E1E4E8 dashed',
     boxSizing: 'border-box',
-    width: '100%'
+    width: '100%',
+    paddingLeft: 5,
 };
 
 export default createUseStyles(theme => ({
@@ -18,10 +19,7 @@ export default createUseStyles(theme => ({
         marginTop: 60,
     },
     lineCount: lineStyle,
-    line: {
-        ...lineStyle,
-        paddingLeft: 5,
-    },
+    line: lineStyle,
     codeSection: {
         float: 'left',
         width: 'calc(100% - 50px)',
@@ -38,5 +36,11 @@ export default createUseStyles(theme => ({
     },
     removed: {
         backgroundColor: theme.red,
+    },
+    indent: {
+        paddingLeft: 30,
+    },
+    highlight: {
+        backgroundColor: '#E1E4E8',
     }
 }));

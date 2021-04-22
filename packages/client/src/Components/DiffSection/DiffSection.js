@@ -1,12 +1,10 @@
 import { DiffKind, PhraseSymbol } from '@barrman/diffof-common';
 import { withClasses } from '../../Common/styles';
-import styles from './DiffSection.styles';
-import { withStyles } from '../../Common/styles';
 
-const DiffSection = ({ classes, docs, sectionType }) => {
+const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine, unsetSelectedLine }) => {
     const phraseSymbols = {
-        [PhraseSymbol.TAB]: '&#9;',
-        [PhraseSymbol.SPACE]: '&nbsp;'
+        [PhraseSymbol.TAB]: () => <span className={classes.indent} />,
+        [PhraseSymbol.SPACE]: () => '&nbsp;'
     };
 
     const diffKindClasses = {
@@ -20,20 +18,29 @@ const DiffSection = ({ classes, docs, sectionType }) => {
         }
     };
 
+    const getDiffClass = diffKind => diffKindClasses[sectionType][diffKind];
+
     const renderPhrases = phrases => {
         return phrases.map(diffPhrase => {
-            const phraseDiffClass = diffKindClasses[sectionType][diffPhrase.diffKind];
-            const ps = PhraseSymbol;
-            const isPhrase = diffPhrase.phrase instanceof PhraseSymbol;
-            debugger;
-            const phraseText = diffPhrase.phrase instanceof PhraseSymbol ? phraseSymbols[diffPhrase.phrase] : diffPhrase.phrase;
+            const phraseDiffClass = getDiffClass(diffPhrase.diffKind);
+            const phraseText = diffPhrase.isSymbol ? phraseSymbols[diffPhrase.phrase]() : diffPhrase.phrase;
 
             return <span class={phraseDiffClass}>{phraseText}</span>
         });
-    }
+    };
 
-    console.log('docs', docs);
-    console.log('sectionType', sectionType);
+    const generateSetSelectedLineFn = lineCount => () => setSelectedLine(lineCount);
+
+    const renderCodeDiffs = () => {
+        let lineCount = 1;
+        return docs.map(docDiff => {
+            return docDiff.diffLines.map(docLineDiff => {
+                const diffClass = getDiffClass(docLineDiff.diffKind);
+
+                return <div class={withClasses(diffClass, classes.line, { [classes.highlight]: selectedLine === lineCount })} onMouseOver={generateSetSelectedLineFn(lineCount++)} onMouseOut={unsetSelectedLine}>{renderPhrases(docLineDiff.diffPhrases)}</div>
+            })
+        });
+    }
 
     let lineCount = 1;
 
@@ -41,17 +48,11 @@ const DiffSection = ({ classes, docs, sectionType }) => {
         <div id="previous-run" className={classes.diffSection}>
             <div className={classes.linesSection}>
                 {docs.map(docDiff => {
-                    return docDiff.diffLines.map(() => <div className={classes.lineCount}>{lineCount++}</div>)
+                    return docDiff.diffLines.map(docLineDiff => <div onMouseOver={generateSetSelectedLineFn(lineCount)} onMouseOut={unsetSelectedLine} className={withClasses(classes.lineCount, getDiffClass(docLineDiff.diffKind), { [classes.highlight]: selectedLine === lineCount })}>{lineCount++}</div>)
                 })}
             </div>
             <div className={classes.codeSection}>
-                {docs.map(docDiff => {
-                    return docDiff.diffLines.map(docLineDiff => {
-                        const diffClass = diffKindClasses[sectionType][docLineDiff.diffKind];
-
-                        return <div class={withClasses(diffClass, classes.line)}>{renderPhrases(docLineDiff.diffPhrases)}</div>
-                    })
-                })}
+                {renderCodeDiffs()}
             </div>
         </div>
     );
@@ -62,4 +63,4 @@ export const SectionType = {
     PREVIOUS: -1,
 };
 
-export default withStyles(DiffSection)(styles);
+export default DiffSection;
