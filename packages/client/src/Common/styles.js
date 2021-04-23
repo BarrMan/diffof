@@ -3,7 +3,7 @@ import { useTheme } from 'react-jss';
 export const withClasses = (...classes) => {
     const reducedClasses = classes.reduce((acc, classObj) => {
         let classNames = classObj || [''];
-        const c = classes;
+
         switch (typeof classObj) {
             case 'string':
                 classNames = [classObj];

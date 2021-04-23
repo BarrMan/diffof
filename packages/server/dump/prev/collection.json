@@ -1,0 +1,24 @@
+[
+    {
+        "uniqueKey": 2,
+        "a": 1,
+        "b": 2,
+        "nested": {
+            "nestedB": {
+                "n1": 1,
+                "n2": "2"
+            }
+        }
+    },
+    {
+        "uniqueKey": 3,
+        "a": 1,
+        "b": 2,
+        "nested": {
+            "nestedB": {
+                "n1": 1,
+                "n2": "2"
+            }
+        }
+    }
+]

@@ -11,4 +11,10 @@ export default class DiffLineBuilder implements IDiffLine {
 
         return this;
     }
+
+    addPhrases(phrases: IDiffPhrase[]): DiffLineBuilder {
+        phrases.forEach(phrase => this.addPhrase(phrase));
+
+        return this;
+    }
 }

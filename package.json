@@ -5,6 +5,8 @@
   },
   "scripts": {
     "build": "lerna run build --stream",
-    "start": "lerna run start --stream"
+    "prestart": "npm run build",
+    "start": "lerna run start --stream",
+    "start:dev": "lerna run start:dev --stream"
   }
 }

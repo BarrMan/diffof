@@ -4,7 +4,7 @@ import IDiffLine from "../interfaces/IDiffLine";
 import DiffLineBuilder from "./DiffLineBuilder";
 
 export default class BuildInfoBuilder implements IDiffInfo {
-    constructor(public diffLines: IDiffLine[] = []) {}
+    constructor(public diffLines: IDiffLine[] = []) { }
 
     public addLine(): DiffLineBuilder;
     public addLine(diffKind?: DiffKind): DiffLineBuilder;
@@ -15,5 +15,11 @@ export default class BuildInfoBuilder implements IDiffInfo {
         this.diffLines.push(diffLine);
 
         return diffLine;
+    }
+
+    public concat(diffInfo: IDiffInfo): void {
+        diffInfo.diffLines.forEach(diffLine => {
+            this.addLine(diffLine.diffKind).addPhrases(diffLine.diffPhrases);
+        });
     }
 }

@@ -9,7 +9,7 @@ const StickyMenu = ({ classes, loading, totalDocuments }) => (
             </FancyButton>
             <FancyButton className={classes.navItem}>
                 <i className="fas fa-arrow-left"></i>
-                Previous documents
+                &nbsp;Previous documents
             </FancyButton>
             {<div className={classes.middleHeaderSection}>
                 {loading ? <div className={classes.loader}></div> : <Header />}
