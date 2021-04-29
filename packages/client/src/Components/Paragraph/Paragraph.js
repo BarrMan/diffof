@@ -1,3 +1,3 @@
-const Paragraph = ({ children, classes }) => <div className={classes.indent}>{children}</div>;
+const Paragraph = ({ children }) => <div>{children}</div>;
 
 export default Paragraph;

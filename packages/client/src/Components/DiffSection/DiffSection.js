@@ -39,16 +39,19 @@ const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine
   const renderCodeDiffs = () => {
     let lineCount = 1;
 
-    const renderParagraph = (paragraph) => {
-      const IndentedParagraph = Paragraph(paragraph.indent);
+    const renderIndentation = (indent) => {
+      return new Array(indent).fill().map(() => phraseSymbols[PhraseSymbolCharacters.TAB]());
+    };
 
+    const renderParagraph = (paragraph, indent = 0) => {
       return (
-        <IndentedParagraph paragraphId={paragraph.id}>
+        <Paragraph paragraphId={paragraph.id}>
           {paragraph.content.map((paragraphContent) => {
-            if (paragraphContent.isParagraph) return renderParagraph(paragraphContent);
+            if (paragraphContent.isParagraph) return renderParagraph(paragraphContent, paragraph.indent + indent);
 
             const diffClass = getDiffClass(paragraphContent.diffKind);
 
+            console.log("indent", paragraph.indent + indent);
             return (
               <div
                 key={lineCount}
@@ -58,11 +61,12 @@ const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine
                 onMouseOver={generateSetSelectedLineFn(lineCount++)}
                 onMouseOut={unsetSelectedLine}
               >
+                {renderIndentation(paragraph.indent + indent)}
                 {renderPhrases(paragraphContent.diffPhrases)}
               </div>
             );
           })}
-        </IndentedParagraph>
+        </Paragraph>
       );
     };
 

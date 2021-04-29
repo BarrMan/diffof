@@ -7,4 +7,7 @@ export default (indent) =>
     indent: {
       paddingLeft: defaultIndent * indent,
     },
+    paragraph: {
+      boxSizing: "border-box",
+    },
   }));
