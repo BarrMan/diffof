@@ -1,5 +1,4 @@
 import { createUseStyles } from "react-jss";
-import theme from "../../App.theme";
 
 const lineStyle = {
   borderBottom: "1px #E1E4E8 dashed",

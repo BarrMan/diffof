@@ -1,6 +1,6 @@
 import { DiffKind, PhraseSymbolCharacters } from "@barrman/diffof-common";
 import { withClasses } from "../../Common/styles";
-import Paragraph from "../Paragraph/Paragraph";
+import Paragraph from "../Paragraph/ParagraphContainer";
 
 const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine, unsetSelectedLine }) => {
   const phraseSymbols = {
@@ -40,8 +40,10 @@ const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine
     let lineCount = 1;
 
     const renderParagraph = (paragraph) => {
+      const IndentedParagraph = Paragraph(paragraph.indent);
+
       return (
-        <Paragraph paragraphId={paragraph.id}>
+        <IndentedParagraph paragraphId={paragraph.id}>
           {paragraph.content.map((paragraphContent) => {
             if (paragraphContent.isParagraph) return renderParagraph(paragraphContent);
 
@@ -60,7 +62,7 @@ const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine
               </div>
             );
           })}
-        </Paragraph>
+        </IndentedParagraph>
       );
     };
 
