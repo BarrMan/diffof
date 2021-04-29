@@ -175,6 +175,7 @@ export default class DocumentDiffStrategy
           }
           diffInfo.addPhrase(",");
         });
+        // TODO: loop through all entries of next
         diffInfo.closeParagraph();
         diffInfo.addLine().addPhrase("}");
       } else {

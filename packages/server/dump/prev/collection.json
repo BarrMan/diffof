@@ -1,24 +1,6 @@
 [
   {
-    "uniqueKey": 2,
-    "a": "Asd",
-    "b": 2,
-    "nested": {
-      "nestedB": {
-        "n1": 1,
-        "n2": "2"
-      }
-    }
-  },
-  {
     "uniqueKey": 3,
-    "a": "ffff",
-    "b": 2,
-    "nested": {
-      "nestedB": {
-        "n1": 1,
-        "n2": "2"
-      }
-    }
+    "a": 2
   }
 ]
