@@ -1,3 +1,3 @@
-interface DocumentDiffOptions {
+export interface DocumentDiffOptions {
     uniqueKey: string;
 }

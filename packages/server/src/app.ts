@@ -1,7 +1,5 @@
 /* eslint-disable no-restricted-globals */
 import express, { Request, Response } from 'express';
-// import prev from '../dump/prev/collection.json';
-// import next from '../dump/next/collection.json';
 import DocumentDiffStrategy from './diffStrategies/DocumentDiffStrategy';
 
 const app: express.Application = express();

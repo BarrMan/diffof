@@ -1,5 +1,10 @@
-import IDiffLine from "./IDiffLine";
+import { IDiffLine } from "./IDiffLine";
+import { IParagraph } from "./IParagraph";
 
 export default interface IDiffInfo {
-    diffLines: IDiffLine[];
+    stackPreviousLine: IDiffLine;
+
+    currentParagraph: IParagraph;
+
+    paragraphs: IParagraph[];
 }

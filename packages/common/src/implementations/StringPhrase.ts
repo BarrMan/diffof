@@ -2,5 +2,9 @@ import { DiffKind } from "../interfaces/DiffKind";
 import IDiffPhrase from "../interfaces/IDiffPhrase";
 
 export class StringPhrase implements IDiffPhrase<string> {
-    constructor(public phrase: string, public diffKind?: DiffKind) { }
+    public phrase;
+
+    constructor(private _phrase: string, public diffKind?: DiffKind) {
+        this.phrase = typeof _phrase === 'string' ? `"${_phrase}"` : _phrase;
+    }
 }

@@ -1,13 +1,29 @@
 import DiffKind from "../interfaces/DiffKind";
-import IDiffLine from "../interfaces/IDiffLine";
-import { IDiffPhrase } from "@barrman/diffof-common";
+import { IDiffLine } from "../interfaces/IDiffLine";
+import { IDiffPhrase, StringPhrase, PhraseSymbolCharacters, SymbolPhrase } from "@barrman/diffof-common";
 
 export default class DiffLineBuilder implements IDiffLine {
+    public indent = 0;
+
     constructor(public diffKind?: DiffKind, public diffPhrases: IDiffPhrase[] = []) {
     }
 
-    addPhrase(phrase: IDiffPhrase): DiffLineBuilder {
-        this.diffPhrases.push(phrase);
+    addIndent(): DiffLineBuilder {
+        this.indent++;
+
+        return this.addPhrase(new SymbolPhrase(PhraseSymbolCharacters.TAB));
+    }
+
+    removeIndent(): DiffLineBuilder {
+        this.indent--;
+
+        return this;
+    }
+
+    addPhrase(phrase: IDiffPhrase | string): DiffLineBuilder {
+        const _phrase = typeof phrase === 'string' ? new StringPhrase(phrase) : phrase;
+
+        this.diffPhrases.push(_phrase);
 
         return this;
     }

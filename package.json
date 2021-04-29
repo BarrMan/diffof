@@ -7,6 +7,7 @@
     "build": "lerna run build --stream",
     "prestart": "npm run build",
     "start": "lerna run start --stream",
-    "start:dev": "lerna run start:dev --stream"
+    "start:dev": "lerna run start:dev --stream",
+    "bootstrap": "lerna exec npm install"
   }
 }

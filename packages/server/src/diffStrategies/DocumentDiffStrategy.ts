@@ -1,12 +1,17 @@
 import { keyBy } from 'lodash';
+import { StringPhrase, SymbolPhrase, PhraseSymbolCharacters } from '@barrman/diffof-common';
 import DiffInfoBuilder from '../classes/DiffInfoBuilder';
 import DiffKind from '../interfaces/DiffKind';
 
 import IDiffInfo from '../interfaces/IDiffInfo';
 import IDiffState from '../interfaces/IDiffState';
-import { KeyValuePhrase, StringPhrase, PhraseSymbolCharacters } from '@barrman/diffof-common';
 import DiffStrategy from './DiffStrategy';
 import { isPrimitiveType } from '../classes/isPrimitiveType';
+import { DocumentDiffOptions } from '../interfaces/DocumentDiffOptions';
+import { KeyVal } from '../classes/KeyVal';
+import { DiffParagraphBuilder } from '../classes/DiffParagraphBuilder';
+import { IParagraph } from 'src/interfaces/IParagraph';
+import { IDiffLine } from 'src/interfaces/IDiffLine';
 
 type DocumentType = Record<string, unknown>;
 export default class DocumentDiffStrategy implements DiffStrategy<DocumentType, IDiffInfo, DocumentDiffOptions> {
@@ -22,22 +27,43 @@ export default class DocumentDiffStrategy implements DiffStrategy<DocumentType, 
         })));
     };
 
+    private cleanParagraphCircularDependencies(paragraph: IParagraph) {
+        delete paragraph.parent;
+        delete paragraph.currentLine;
+        paragraph.content.forEach((content: IParagraph | IDiffLine) => {
+            if (content instanceof DiffParagraphBuilder) {
+                delete content.parent;
+
+                this.cleanParagraphCircularDependencies(content);
+            }
+        })
+    }
+
+    private cleanCircularDependencies(diffInfos: IDiffInfo[]) {
+        diffInfos.forEach(diffInfo => {
+            diffInfo.paragraphs.forEach(paragraph => this.cleanParagraphCircularDependencies(paragraph));
+            delete diffInfo.currentParagraph;
+            delete diffInfo.stackPreviousLine;
+        });
+
+        return diffInfos;
+    }
+
     getDiffs = (diffStates: IDiffState<DocumentType>[]): IDiffInfo[] => {
-        console.log('diffStates', diffStates);
         const diffs = diffStates.map(diffState => {
             return this.evaluateDocumentDiffs(diffState);
         });
 
-        return diffs;
+        return this.cleanCircularDependencies(diffs);
     };
 
-    private render(diffKind: DiffKind | (() => DiffKind), obj: unknown): IDiffInfo {
+    private render(diffKind: DiffKind | (() => DiffKind), obj: unknown): DiffInfoBuilder {
         const diffInfo = new DiffInfoBuilder();
 
         const getDiffKind = typeof diffKind === 'function' ? diffKind : () => diffKind;
 
         if (Array.isArray(obj)) {
-            diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase('['));
+            diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase('[')).addIndent();
             obj.forEach(item => diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase(`${item},`)));
             diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase(']'));
         } else if (typeof obj === 'object') {
@@ -45,7 +71,7 @@ export default class DocumentDiffStrategy implements DiffStrategy<DocumentType, 
             Object.entries(obj).forEach(([key, val]) => {
                 const line = diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase(`${key}:`));
                 if (isPrimitiveType(val)) {
-                    line.addPhrase(new StringPhrase(val));
+                    line.addPhrases([new SymbolPhrase(PhraseSymbolCharacters.SPACE), new StringPhrase(val), new StringPhrase(',')]);
                 } else {
                     diffInfo.concat(this.render(diffKind, val));
                 }
@@ -58,7 +84,7 @@ export default class DocumentDiffStrategy implements DiffStrategy<DocumentType, 
         return diffInfo;
     }
 
-    private evalulatePropertyDiffs(prev: unknown, next: unknown): IDiffInfo {
+    private evalulatePropertyDiffs(prev: unknown, next: unknown): DiffInfoBuilder {
         const diffInfo = new DiffInfoBuilder();
 
         if (typeof prev !== typeof next || Array.isArray(prev) !== Array.isArray(next)) {
@@ -68,45 +94,59 @@ export default class DocumentDiffStrategy implements DiffStrategy<DocumentType, 
             diffInfo.concat(this.render(DiffKind.ADDED, next));
         } else {
             // same type
-            console.log('same type');
-            diffInfo.concat(this.render(DiffKind.NONE, next));
+            if (Array.isArray(prev)) {
+                diffInfo.addLine().addPhrase('[');
+                diffInfo.addParagraph(new DiffParagraphBuilder(1));
+                prev.forEach(prevItem => {
+                    // TODO: Add complex array types
+                    if ((next as any[]).indexOf(prevItem) === -1) {
+                        diffInfo.addLine(DiffKind.REMOVED).addPhrase(prevItem);
+                    } else {
+                        diffInfo.addLine().addPhrase(prevItem);
+                    }
+                });
+                (next as any[]).forEach(nextItem => {
+                    if (prev.indexOf(nextItem) === -1) {
+                        diffInfo.addLine(DiffKind.ADDED).addPhrase(nextItem);
+                    }
+                })
+                diffInfo.closeParagraph();
+                diffInfo.addLine().addPhrase(']');
+            } else if (prev instanceof KeyVal && next instanceof KeyVal) {
+                diffInfo.addLine().addPhrase(`${prev.key}: `);
+                diffInfo.concat(this.evalulatePropertyDiffs(prev.val, next.val));
+                diffInfo.addPhrase(',');
+            } else if (typeof prev === 'object') {
+                diffInfo.addLine().addPhrase('{');
+                diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
+                Object.entries(prev).forEach(([prevKey, prevVal]) => {
+                    if (!next[prevKey]) {
+                        diffInfo.concat(this.render(DiffKind.REMOVED, new KeyVal(prevKey, prevVal)));
+                    } else {
+                        diffInfo.addLine().addPhrase(`${prevKey}: `);
+                        const nestedDiffs = this.evalulatePropertyDiffs(prevVal, next[prevKey])
+                        diffInfo.concat(nestedDiffs);
+                    }
+                    diffInfo.addPhrase(',');
+                });
+                diffInfo.closeParagraph();
+                diffInfo.addLine().addPhrase('}');
+            } else {
+                if (prev !== next) {
+                    diffInfo.addLine(DiffKind.REMOVED).addPhrase(new StringPhrase(prev));
+                    diffInfo.addLine(DiffKind.ADDED).addPhrase(new StringPhrase(next));
+                } else {
+                    diffInfo.addPhrase(new StringPhrase(prev));
+                }
+            }
         }
 
-        // Object.entries(prev).forEach(([prevKey, prevVal]) => {
-        //     if (!(prevKey in next)) {
-        //         diffInfo.addLine(DiffKind.REMOVED).addPhrase(new KeyValuePhrase(prevKey, prevVal));
-        //     } else {
-        //         const nextVal = next[prevKey];
-
-        //         if (isPrimitiveType(prevVal) && isPrimitiveType(nextVal)) {
-        //             if (prevVal === nextVal) {
-        //                 diffInfo.addLine().addPhrase(new KeyValuePhrase(prevKey, prevVal));
-        //             } else {
-        //                 diffInfo.addLine(DiffKind.REMOVED).addPhrase(new KeyValuePhrase(prevKey, prevVal));
-        //                 diffInfo.addLine(DiffKind.ADDED).addPhrase(new KeyValuePhrase(prevKey, nextVal));
-        //             }
-        //         } else if (isPrimitiveType(prevVal) !== isPrimitiveType(nextVal)) {
-        //             diffInfo.concat(this.evaluateDocumentDiffs(prevVal, nextVal));
-        //             // diffInfo.concat(this.evalulatePropertyDiffs({ [prevKey]: prevVal }, { [prevKey]: nextVal }));
-        //         }
-        //     }
-        // });
-
+        console.log(diffInfo);
         return diffInfo;
     }
 
     private evaluateDocumentDiffs = (diffState: IDiffState<DocumentType>): IDiffInfo => {
-        const diffInfo = new DiffInfoBuilder();
-
-        console.log('evaluatingDocumentDiffs');
-        diffInfo.addLine().addPhrase(new StringPhrase('{'));
-
-        const propertyDiffs = this.evalulatePropertyDiffs(diffState.prev, diffState.next)
-        diffInfo.concat(propertyDiffs);
-
-        diffInfo.addLine().addPhrase(new StringPhrase('}'));
-
-        return diffInfo;
+        return this.evalulatePropertyDiffs(diffState.prev, diffState.next)
     }
 
     fileMask = 'json';
