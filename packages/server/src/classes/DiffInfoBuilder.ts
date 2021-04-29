@@ -27,7 +27,7 @@ export default class DiffInfoBuilder implements IDiffInfo {
     return diffLine;
   }
 
-  public addPhrase(phrase: IDiffPhrase): IDiffLine {
+  public addPhrase(phrase: IDiffPhrase): DiffLineBuilder {
     return this.stackPreviousLine.addPhrase(phrase);
   }
 

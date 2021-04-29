@@ -19,19 +19,34 @@ const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine
     },
   };
 
-  const getDiffClass = (diffKind) => diffKindClasses[sectionType][diffKind];
+  const renderDiffPhrase = {
+    [SectionType.CURRENT]: {
+      [DiffKind.ADDED]: true,
+      [DiffKind.REMOVED]: false,
+    },
+    [SectionType.PREVIOUS]: {
+      [DiffKind.ADDED]: false,
+      [DiffKind.REMOVED]: true,
+    },
+  };
+
+  const getDiffClass = (diffKind) => diffKindClasses[SectionType.CURRENT][diffKind];
 
   const renderPhrases = (phrases) => {
-    return phrases.map((diffPhrase, i) => {
-      const phraseDiffClass = getDiffClass(diffPhrase.diffKind);
-      const phraseText = diffPhrase.isSymbol ? phraseSymbols[diffPhrase.phrase]() : diffPhrase.phrase;
+    return phrases
+      .filter((phrase) => {
+        return typeof phrase.diffKind === "number" ? renderDiffPhrase[sectionType][phrase.diffKind] : true;
+      })
+      .map((diffPhrase, i) => {
+        const phraseDiffClass = getDiffClass(diffPhrase.diffKind);
+        const phraseText = diffPhrase.isSymbol ? phraseSymbols[diffPhrase.phrase]() : diffPhrase.phrase;
 
-      return (
-        <span key={i} className={phraseDiffClass}>
-          {phraseText}
-        </span>
-      );
-    });
+        return (
+          <span key={i} className={phraseDiffClass}>
+            {phraseText}
+          </span>
+        );
+      });
   };
 
   const generateSetSelectedLineFn = (lineCount) => () => setSelectedLine(lineCount);
@@ -51,7 +66,6 @@ const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine
 
             const diffClass = getDiffClass(paragraphContent.diffKind);
 
-            console.log("indent", paragraph.indent + indent);
             return (
               <div
                 key={lineCount}

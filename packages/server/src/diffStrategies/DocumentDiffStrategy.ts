@@ -184,6 +184,7 @@ export default class DocumentDiffStrategy
         } else {
           diffInfo.addPhrase(new StringPhrase(prev));
         }
+        diffInfo.addPhrase(",");
       }
     }
 
