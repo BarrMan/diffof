@@ -1,6 +1,6 @@
 # diffOf
 
-###### A tool that is used to perform diffs between any file to any file using a cli.
+##### A tool that is used to perform diffs between any file to any file using a cli.
 
 ### Table of Contents
 
