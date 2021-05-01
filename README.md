@@ -3,7 +3,9 @@
 A tool that is used to perform diffs between any file to any file using a cli.
 
 [Supported file types](#supported-types)
+
 [Installation](#installation)
+
 [CLI](#cli)
 
 ### Supported Types
