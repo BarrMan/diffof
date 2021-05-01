@@ -1,11 +1,18 @@
-import { DiffKind, PhraseSymbolCharacters } from "@barrman/diffof-common";
-import { withClasses } from "../../Common/styles";
-import Paragraph from "../Paragraph/ParagraphContainer";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { DiffKind, PhraseSymbolCharacters } from '@barrman/diffof-common';
+import { withClasses } from '../../Common/styles';
+import Paragraph from '../Paragraph/ParagraphContainer';
+
+export const SectionType = {
+  CURRENT: 1,
+  PREVIOUS: -1,
+};
 
 const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine, unsetSelectedLine }) => {
   const phraseSymbols = {
     [PhraseSymbolCharacters.TAB]: () => <span className={classes.indent} />,
-    [PhraseSymbolCharacters.SPACE]: () => " ",
+    [PhraseSymbolCharacters.SPACE]: () => ' ',
   };
 
   const diffKindClasses = {
@@ -32,92 +39,78 @@ const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine
 
   const getDiffClass = (diffKind) => diffKindClasses[SectionType.CURRENT][diffKind];
 
-  const renderPhrases = (phrases) => {
-    return phrases
-      .filter((phrase) => {
-        return typeof phrase.diffKind === "number" ? renderDiffPhrase[sectionType][phrase.diffKind] : true;
-      })
-      .map((diffPhrase, i) => {
+  const renderPhrases = (phrases) =>
+    phrases
+      .filter((phrase) => (typeof phrase.diffKind === 'number' ? renderDiffPhrase[sectionType][phrase.diffKind] : true))
+      .map((diffPhrase) => {
         const phraseDiffClass = getDiffClass(diffPhrase.diffKind);
         const phraseText = diffPhrase.isSymbol ? phraseSymbols[diffPhrase.phrase]() : diffPhrase.phrase;
 
-        return (
-          <span key={i} className={phraseDiffClass}>
-            {phraseText}
-          </span>
-        );
+        return <span className={phraseDiffClass}>{phraseText}</span>;
       });
-  };
 
   const generateSetSelectedLineFn = (lineCount) => () => setSelectedLine(lineCount);
 
   const renderCodeDiffs = () => {
     let lineCount = 1;
 
-    const renderIndentation = (indent) => {
-      return new Array(indent).fill().map(() => phraseSymbols[PhraseSymbolCharacters.TAB]());
-    };
+    const renderIndentation = (indent) =>
+      new Array(indent).fill().map(() => phraseSymbols[PhraseSymbolCharacters.TAB]());
 
-    const renderParagraph = (paragraph, indent = 0) => {
-      return (
-        <Paragraph paragraphId={paragraph.id}>
-          {paragraph.content.map((paragraphContent) => {
-            if (paragraphContent.isParagraph) return renderParagraph(paragraphContent, paragraph.indent + indent);
+    const renderParagraph = (paragraph, indent = 0) => (
+      <Paragraph paragraphId={paragraph.id}>
+        {paragraph.content.map((paragraphContent) => {
+          if (paragraphContent.isParagraph) return renderParagraph(paragraphContent, paragraph.indent + indent);
 
-            const diffClass = getDiffClass(paragraphContent.diffKind);
+          const diffClass = getDiffClass(paragraphContent.diffKind);
 
-            return (
-              <div
-                key={lineCount}
-                className={withClasses(diffClass, classes.line, {
-                  [classes.highlight]: selectedLine === lineCount,
-                })}
-                onMouseOver={generateSetSelectedLineFn(lineCount++)}
-                onMouseOut={unsetSelectedLine}
-              >
-                {renderIndentation(paragraph.indent + indent)}
-                {renderPhrases(paragraphContent.diffPhrases)}
-              </div>
-            );
-          })}
-        </Paragraph>
-      );
-    };
+          const incLineCount = lineCount++;
+          return (
+            <div
+              key={lineCount}
+              className={withClasses(diffClass, classes.line, {
+                [classes.highlight]: selectedLine === lineCount,
+              })}
+              onFocus={generateSetSelectedLineFn(incLineCount)}
+              onMouseOver={generateSetSelectedLineFn(incLineCount)}
+              onMouseOut={unsetSelectedLine}
+              onBlur={unsetSelectedLine}
+            >
+              {renderIndentation(paragraph.indent + indent)}
+              {renderPhrases(paragraphContent.diffPhrases)}
+            </div>
+          );
+        })}
+      </Paragraph>
+    );
 
-    return docs.map((docDiff) => {
-      return docDiff.paragraphs.map((paragraph) => {
-        return renderParagraph(paragraph);
-      });
-    });
+    return docs.map((docDiff) => docDiff.paragraphs.map((paragraph) => renderParagraph(paragraph)));
   };
 
   const renderLinesCount = () => {
     let lineCount = 1;
 
-    const renderParagraph = (paragraph) => {
-      return paragraph.content.map((paragraphContent) => {
+    const renderParagraph = (paragraph) =>
+      paragraph.content.map((paragraphContent) => {
         if (paragraphContent.isParagraph) return renderParagraph(paragraphContent);
 
         return (
           <div
             key={lineCount}
             onMouseOver={generateSetSelectedLineFn(lineCount)}
+            onFocus={generateSetSelectedLineFn(lineCount)}
             onMouseOut={unsetSelectedLine}
             className={withClasses(classes.lineCount, getDiffClass(paragraphContent.diffKind), {
               [classes.highlight]: selectedLine === lineCount,
             })}
+            onBlur={unsetSelectedLine}
           >
             {lineCount++}
           </div>
         );
       });
-    };
 
-    return docs.map((docDiff) => {
-      return docDiff.paragraphs.map((paragraph) => {
-        return renderParagraph(paragraph);
-      });
-    });
+    return docs.map((docDiff) => docDiff.paragraphs.map((paragraph) => renderParagraph(paragraph)));
   };
 
   return (
@@ -128,9 +121,13 @@ const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine
   );
 };
 
-export const SectionType = {
-  CURRENT: 1,
-  PREVIOUS: -1,
+DiffSection.propTypes = {
+  classes: PropTypes.object.isRequired,
+  docs: PropTypes.array.isRequired,
+  sectionType: PropTypes.string.isRequired,
+  selectedLine: PropTypes.number.isRequired,
+  setSelectedLine: PropTypes.func.isRequired,
+  unsetSelectedLine: PropTypes.func.isRequired,
 };
 
 export default DiffSection;

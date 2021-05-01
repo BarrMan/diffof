@@ -1,23 +1,22 @@
-import { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { createUseStyles } from 'react-jss';
 
 import { withStyles } from '../Common/styles';
 
 const useStyles = createUseStyles({
-    changeGroups: {
-        float: 'left',
-        width: 300,
-        marginTop: 60,
-        marginLeft: 10,
-    }
+  changeGroups: {
+    float: 'left',
+    width: 300,
+    marginTop: 60,
+    marginLeft: 10,
+  },
 });
 
-class ChangeGroups extends Component {
-    render() {
-        const { classes } = this.props;
+const ChangeGroups = ({ classes }) => <div className={classes.changeGroups} />;
 
-        return (<div className={classes.changeGroups}></div>);
-    }
-}
+ChangeGroups.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
 export default withStyles(ChangeGroups)(useStyles);

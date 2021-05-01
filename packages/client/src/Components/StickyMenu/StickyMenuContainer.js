@@ -4,15 +4,15 @@ import StickyMenu from './StickyMenu';
 import styles from './StickyMenu.styles';
 import { withStyles } from '../../Common/styles';
 
-const mapStateToProps = store => {
-    const { diffs } = store;
-    const { loading, totalDocuments } = diffs;
+const mapStateToProps = (store) => {
+  const { diffs } = store;
+  const { loading, totalDocuments } = diffs;
 
-    return {
-        loading,
-        totalDocuments,
-    };
-}
+  return {
+    loading,
+    totalDocuments,
+  };
+};
 
 const mapDispatchToProps = () => ({});
 

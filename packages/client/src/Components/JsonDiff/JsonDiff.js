@@ -1,15 +1,28 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class JsonDiff extends Component {
-    componentDidMount() {
-        const { location } = this.props;
-        const queryParams = new URLSearchParams(location.search);
+  componentDidMount() {
+    const { location, loadDocumentDiffs } = this.props;
+    const queryParams = new URLSearchParams(location.search);
 
-        this.props.loadDocumentDiffs(queryParams.get('fromIndex'), queryParams.get('toIndex'), queryParams.get('fromSource'), queryParams.get('toSource'));
-    }
+    loadDocumentDiffs(
+      queryParams.get('fromIndex'),
+      queryParams.get('toIndex'),
+      queryParams.get('fromSource'),
+      queryParams.get('toSource')
+    );
+  }
 
-    render() {
-        return this.props.children;
-    }
+  render() {
+    const { children } = this.props;
+
+    return children;
+  }
 }
 
+JsonDiff.propTypes = {
+  children: PropTypes.array.isRequired,
+  loadDocumentDiffs: PropTypes.func.isRequired,
+  location: PropTypes.object.isRequired,
+};

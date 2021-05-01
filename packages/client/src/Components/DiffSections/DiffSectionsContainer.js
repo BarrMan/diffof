@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
 import DiffSections from './DiffSections';
 
-const mapStateToProps = store => {
-    const { diffs } = store;
-    const { documentsDiffs } = diffs;
+const mapStateToProps = (store) => {
+  const { diffs } = store;
+  const { documentsDiffs } = diffs;
 
-    return { documentsDiffs };
+  return { documentsDiffs };
 };
 
 const mapDispatchToProps = () => ({});

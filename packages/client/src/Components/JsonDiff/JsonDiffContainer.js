@@ -6,8 +6,9 @@ import diffsActions from '../../actions/diffsActions';
 
 const mapStateToProps = () => ({});
 
-const mapDispatchToProps = dispatch => ({
-    loadDocumentDiffs: (fromIndex, toIndex, fromSource, toSource) => dispatch(diffsActions.loadDocumentsDiffs(fromIndex, toIndex, fromSource, toSource)),
-});;
+const mapDispatchToProps = (dispatch) => ({
+  loadDocumentDiffs: (fromIndex, toIndex, fromSource, toSource) =>
+    dispatch(diffsActions.loadDocumentsDiffs(fromIndex, toIndex, fromSource, toSource)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(JsonDiff));
