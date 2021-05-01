@@ -1,11 +1,11 @@
-import { IDiffPhrase } from '@barrman/diffof-common';
-import { IParagraph } from 'src/interfaces/IParagraph';
-import { TContent } from 'src/interfaces/TContent';
-import DiffKind from '../interfaces/DiffKind';
-import IDiffInfo from '../interfaces/IDiffInfo';
-import { IDiffLine } from '../interfaces/IDiffLine';
-import DiffLineBuilder from './DiffLineBuilder';
-import { DiffParagraphBuilder } from './DiffParagraphBuilder';
+import { IDiffPhrase } from "@barrman/diffof-common";
+import { IParagraph } from "src/interfaces/IParagraph";
+import { TContent } from "src/interfaces/TContent";
+import DiffKind from "../interfaces/DiffKind";
+import IDiffInfo from "../interfaces/IDiffInfo";
+import { IDiffLine } from "../interfaces/IDiffLine";
+import DiffLineBuilder from "./DiffLineBuilder";
+import { DiffParagraphBuilder } from "./DiffParagraphBuilder";
 
 export default class DiffInfoBuilder implements IDiffInfo {
   public paragraphs: IParagraph[] = [];
@@ -40,11 +40,11 @@ export default class DiffInfoBuilder implements IDiffInfo {
   }
 
   public closeParagraph(): IParagraph {
-    if (!this.currentParagraph) throw new Error('No opened paragraph');
+    if (!this.currentParagraph) throw new Error("No opened paragraph");
 
     this.currentParagraph.closeParagraph();
 
-    if (!this.currentParagraph) throw new Error('Paragraph has no parent');
+    if (!this.currentParagraph) throw new Error("Paragraph has no parent");
 
     return this.currentParagraph;
   }
