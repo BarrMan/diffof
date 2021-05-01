@@ -2,7 +2,7 @@
 
 A tool that is used to perform diffs between any file to any file using a cli.
 
-# Table of Contents
+### Table of Contents
 
 - [Supported Types](#supported-types)
 - [Installation](#installation)
