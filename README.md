@@ -30,6 +30,11 @@ JSON
 Debugging the server using VSCode is as simple as running `Debug server` configuration set in `.vscode/launch.json`. After that, set the breakpoints in the `.ts` files.
 
 #### Graph
+
+##### Requirements
+Make sure docker-compose is installed on your machine: https://docs.docker.com/compose/install/
+
+
 There's an option to view all relations visualized using a graph database.
 
 ![Graph Visualization Sample](./packages/server/debug/graph.png "Graph Visualization Sample")
