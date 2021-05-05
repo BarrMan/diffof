@@ -1,12 +1,22 @@
 /* eslint-disable no-restricted-globals */
 import express, { Request, Response } from 'express';
 import DocumentDiffStrategy from './diffStrategies/DocumentDiffStrategy';
+import { resetParagraphIds } from './classes/DiffParagraphBuilder';
+import { GraphBuilder } from './classes/GraphBuilder';
 
 const app: express.Application = express();
 
 app.use(express.json());
 
+if (process.env.GRAPH_ENABLED === 'true') {
+  GraphBuilder.enable();
+}
+
 app.get('/diff', async (req: Request, res: Response) => {
+  resetParagraphIds();
+
+  await GraphBuilder.clearGraph();
+
   const { fromIndex = 0, toIndex = 100 } = req.query;
 
   const fromIndexInt = parseInt(fromIndex as string);
@@ -35,8 +45,10 @@ app.get('/diff', async (req: Request, res: Response) => {
     uniqueKey: 'uniqueKey'
   });
   const diffRes = documentsDiffStrategy.getDiffs(diffPairs);
+
+  await GraphBuilder.commit();
   // const diffRes = getDiffs(fromIndexInt, toIndexInt);
-  console.log('done calculating diffs...');
+  console.log('done calculating diffs...', diffRes);
 
   const data = {
     documentDiffs: diffRes,

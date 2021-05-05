@@ -64,17 +64,19 @@ const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine
 
           const diffClass = getDiffClass(paragraphContent.diffKind);
 
-          const incLineCount = lineCount++;
+          lineCount++;
+          const currentLineCount = lineCount - 1;
           return (
             <div
-              key={lineCount}
+              key={currentLineCount}
               className={withClasses(diffClass, classes.line, {
-                [classes.highlight]: selectedLine === lineCount,
+                [classes.highlight]: selectedLine === currentLineCount,
               })}
-              onFocus={generateSetSelectedLineFn(incLineCount)}
-              onMouseOver={generateSetSelectedLineFn(incLineCount)}
+              onMouseOver={generateSetSelectedLineFn(currentLineCount)}
               onMouseOut={unsetSelectedLine}
-              onBlur={unsetSelectedLine}
+              onFocus={() => {}}
+              onBlur={() => {}}
+              title={paragraph.id}
             >
               {renderIndentation(paragraph.indent + indent)}
               {renderPhrases(paragraphContent.diffPhrases)}
@@ -98,12 +100,12 @@ const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine
           <div
             key={lineCount}
             onMouseOver={generateSetSelectedLineFn(lineCount)}
-            onFocus={generateSetSelectedLineFn(lineCount)}
             onMouseOut={unsetSelectedLine}
             className={withClasses(classes.lineCount, getDiffClass(paragraphContent.diffKind), {
               [classes.highlight]: selectedLine === lineCount,
             })}
-            onBlur={unsetSelectedLine}
+            onFocus={() => {}}
+            onBlur={() => {}}
           >
             {lineCount++}
           </div>

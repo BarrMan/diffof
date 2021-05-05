@@ -8,6 +8,8 @@ import { TContent } from "./TContent";
 export interface IParagraph {
   id: number;
 
+  graphId: string;
+
   currentLine: IDiffLine;
 
   indent: number;
@@ -25,4 +27,6 @@ export interface IParagraph {
   addParagraph(paragraph: IParagraph): IParagraph;
 
   closeParagraph(): void;
+
+  debug(): void;
 }

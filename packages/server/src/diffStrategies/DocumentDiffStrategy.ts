@@ -160,6 +160,8 @@ export default class DocumentDiffStrategy
       } else if (typeof prev === "object") {
         diffInfo.addLine().addPhrase("{");
         diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
+        console.log('Opened paragraph');
+        diffInfo.currentParagraph.debug();
         Object.entries(prev).forEach(([prevKey, prevVal]) => {
           if (!next[prevKey]) {
             diffInfo.concat(
@@ -173,11 +175,11 @@ export default class DocumentDiffStrategy
             );
             diffInfo.concat(nestedDiffs);
           }
-          diffInfo.addPhrase(",");
         });
         // TODO: loop through all entries of next
-        diffInfo.closeParagraph();
+        const currentParagraph = diffInfo.closeParagraph();
         diffInfo.addLine().addPhrase("}");
+        currentParagraph.debug();
       } else {
         if (prev !== next) {
           diffInfo.addPhrase(new StringPhrase(prev, DiffKind.REMOVED));
@@ -189,7 +191,6 @@ export default class DocumentDiffStrategy
       }
     }
 
-    console.log(diffInfo);
     return diffInfo;
   }
 

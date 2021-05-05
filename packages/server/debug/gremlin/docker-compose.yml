@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  gremlin:
+      image: tinkerpop/gremlin-server
+      ports:
+        - '8182:8182'
+      volumes:
+        - ./config:/opt/gremlin-server/conf
+        - ./scripts:/opt/gremlin-server/scripts
+  graphexp:
+    image: ghcr.io/armandleopold/graphexp:0.8.3
+    build:
+      context: ./graphexp
+      args:
+        http_proxy: ${http_proxy}
+        https_proxy: ${https_proxy}
+        no_proxy: ${no_proxy}
+    ports:
+      - "8183:80"
+    # depends_on:
+    #   - gremlin

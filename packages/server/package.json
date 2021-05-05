@@ -10,13 +10,14 @@
     "prebuild": "rimraf ./dist",
     "build": "tsc",
     "tsc": "tsc",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@barrman/diffof-common": "^2.2.0",
     "express": "^4.17.1",
+    "gremlin": "^3.4.10",
     "lodash": "^4.17.21"
   },
   "devDependencies": {

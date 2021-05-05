@@ -5,11 +5,17 @@ import DiffKind from "../interfaces/DiffKind";
 import { IParagraph } from "../interfaces/IParagraph";
 import DiffInfoBuilder from "./DiffInfoBuilder";
 import DiffLineBuilder from "./DiffLineBuilder";
+import { GraphBuilder } from './GraphBuilder';
 
 let currentParagraphId = 1;
+export const resetParagraphIds = (): void => {
+  currentParagraphId = 1;
+};
 
 export class DiffParagraphBuilder implements IParagraph {
-  id: number = ++currentParagraphId;
+  id: number = currentParagraphId++;
+
+  graphId = `Paragraph-${this.id.toString()}`;
 
   public isParagraph = true;
 
@@ -19,6 +25,12 @@ export class DiffParagraphBuilder implements IParagraph {
 
   constructor(public indent = 0, parent?: IParagraph | IDiffInfo) {
     this.parent = parent;
+
+    GraphBuilder.addV(this.graphId);
+    
+    if (this.parent) {
+      GraphBuilder.addE(`${this.graphId}-${this.parent.graphId}`, this.graphId, this.parent.graphId)
+    }
   }
 
   content: TContent[] = [];
@@ -50,6 +62,8 @@ export class DiffParagraphBuilder implements IParagraph {
   addParagraph(paragraph: IParagraph): IParagraph {
     paragraph.parent = this;
 
+    GraphBuilder.addE(`${this.graphId}-${paragraph.graphId}`, this.graphId, paragraph.graphId);
+
     this.content.push(paragraph);
 
     this.setCurrentParagraph(paragraph);
@@ -69,5 +83,14 @@ export class DiffParagraphBuilder implements IParagraph {
     }
 
     parent.currentParagraph = paragraph as IParagraph;
+  }
+
+  public debug(): void {
+    let output = '';
+    this.content.forEach(c => {
+      if (c instanceof DiffParagraphBuilder) output += `p${c.id}`;
+      else if(c instanceof DiffLineBuilder) output += c.diffPhrases.map(phr => phr.phrase).join('');
+    });
+    console.log(`paragraph debug [id=${this.id}]`,output);
   }
 }

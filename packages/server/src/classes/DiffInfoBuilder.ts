@@ -1,28 +1,32 @@
 import { IDiffPhrase } from "@barrman/diffof-common";
 import { IParagraph } from "src/interfaces/IParagraph";
-import { TContent } from "src/interfaces/TContent";
 import DiffKind from "../interfaces/DiffKind";
 import IDiffInfo from "../interfaces/IDiffInfo";
-import { IDiffLine } from "../interfaces/IDiffLine";
 import DiffLineBuilder from "./DiffLineBuilder";
 import { DiffParagraphBuilder } from "./DiffParagraphBuilder";
+import { GraphBuilder } from './GraphBuilder';
 
 export default class DiffInfoBuilder implements IDiffInfo {
+  public graphId = `DiffInfo-${Math.ceil(Math.random() * 100).toString()}`;
   public paragraphs: IParagraph[] = [];
   public stackPreviousLine: DiffLineBuilder = new DiffLineBuilder();
   public currentParagraph: IParagraph = new DiffParagraphBuilder(0, this);
 
   constructor() {
-    this.paragraphs.push(this.currentParagraph);
+    GraphBuilder.addV(this.graphId);
+
+    this.addParagraph(this.currentParagraph);
   }
 
   public addLine(): DiffLineBuilder;
   public addLine(diffKind?: DiffKind): DiffLineBuilder;
 
   public addLine(diffKind?: DiffKind): DiffLineBuilder {
-    if (!this.currentParagraph) this.addParagraph(new DiffParagraphBuilder());
+    if (!this.currentParagraph) this.addParagraph(new DiffParagraphBuilder(0, this));
 
     const diffLine = this.currentParagraph.addLine(diffKind);
+
+    GraphBuilder.addE(`${this.graphId}-${diffLine.graphId}`, this.graphId, diffLine.graphId);
 
     return diffLine;
   }
@@ -34,8 +38,10 @@ export default class DiffInfoBuilder implements IDiffInfo {
   public addParagraph(paragraph: IParagraph): IParagraph {
     this.paragraphs.push(paragraph);
 
-    this.currentParagraph = paragraph;
+    GraphBuilder.addE(`${this.graphId}-${paragraph.id.toString()}`, this.graphId, paragraph.graphId);
 
+    this.currentParagraph = paragraph;
+    
     return paragraph;
   }
 
@@ -50,11 +56,15 @@ export default class DiffInfoBuilder implements IDiffInfo {
   }
 
   public concat(diffInfo: DiffInfoBuilder): void {
-    if (diffInfo.stackPreviousLine.diffPhrases) {
+    if (diffInfo.stackPreviousLine.diffPhrases.length) {
       this.currentParagraph.addPhrases(diffInfo.stackPreviousLine.diffPhrases);
     } else {
       diffInfo.paragraphs.forEach((paragraph) => {
-        this.currentParagraph.addParagraph(paragraph);
+        if (paragraph.content.length) {
+          console.log('concating paragraphs');
+          paragraph.debug();
+          this.currentParagraph.addParagraph(paragraph);
+        }
       });
     }
   }
