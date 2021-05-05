@@ -44,7 +44,9 @@ Graph debugging is disabled by default and can be turned on using an ENV variabl
 
 In order to use the graph debugging:
 1. Run gremlin server: `./packages/server/debug/init-graph.sh`
-2. Set ENV variable before running the server: `GRAPH_ENABLED=true`
+2. Set ENV variable before running the server: `GRAPH_ENABLED=true`. There are 2 methods of doing that:
+    1. Running with `Debug server` - Add `"env": { "GRAPH_ENABLED": "true" }` to `.vscode/launch.json`.
+    2. Running the whole project regularly with graph debugging - `GRAPH_ENABLED=true npm start`
 3. Install and run Graph Notebook - Follow the installation instructions in https://github.com/aws/graph-notebook
 4. View all graph items with their properties and connections - Execute the following command in jupyter (after initializing graph connection described in graph notebook's documentation):
 ```
