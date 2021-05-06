@@ -10,7 +10,7 @@ services:
         - ./gremlin/scripts:/opt/gremlin-server/scripts
   
   graph-notebook:
-    image: graph-notebook
+    image: barrman/graph-notebook:latest
     ports:
       - "8888:8888"
     volumes:
