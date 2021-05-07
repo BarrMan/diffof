@@ -13,7 +13,5 @@ services:
     image: barrman/graph-notebook:latest
     ports:
       - "8888:8888"
-    volumes:
-      - ${PWD}/gremlin-client/GraphVisualization.ipynb:/root/notebook/destination/dir/GraphVisualization.ipynb
     depends_on:
       - gremlin
