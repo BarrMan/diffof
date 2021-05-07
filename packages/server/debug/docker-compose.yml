@@ -2,12 +2,12 @@ version: '3.4'
 
 services:
   gremlin:
-      image: tinkerpop/gremlin-server
+      image: barrman/gremlin-server
       ports:
         - '8182:8182'
-      volumes:
-        - ./gremlin/config:/opt/gremlin-server/conf
-        - ./gremlin/scripts:/opt/gremlin-server/scripts
+      # volumes:
+      #   - ./gremlin/config:/opt/gremlin-server/conf
+      #   - ./gremlin/scripts:/opt/gremlin-server/scripts
   
   graph-notebook:
     image: barrman/graph-notebook:latest

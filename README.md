@@ -34,24 +34,15 @@ Debugging the server using VSCode is as simple as running `Debug server` configu
 ##### Requirements
 Make sure docker-compose is installed on your machine: https://docs.docker.com/compose/install/
 
-
 There's an option to view all relations visualized using a graph database.
 
 ![Graph Visualization Sample](./packages/server/debug/graph.png "Graph Visualization Sample")
 
-Graph debugging is disabled by default and can be turned on using an ENV variable: `GRAPH_ENABLED=true`.
-`DocumentDiffStrategy` adds vertexes and edges to the graph and changes will be committed after each diff iteration.
+Graph debugging is disabled by default and can be turned on using `npm run graph:debug`: This command will run a gremlin-server container, graph-notebook container and run the entire app with `GRAPH_ENABLED=TRUE` ENV variable.
+The graph-notebook image also provides a sample working graph visualization notebook that can be accessed in `localhost:8888`.
 
-In order to use the graph debugging:
-1. Run gremlin server: `./packages/server/debug/init-graph.sh`
-2. Set ENV variable before running the server: `GRAPH_ENABLED=true`. There are 2 methods of doing that:
-    1. Running with `Debug server` - Add `"env": { "GRAPH_ENABLED": "true" }` to `.vscode/launch.json`.
-    2. Running the whole project regularly with graph debugging - `GRAPH_ENABLED=true npm start`
-3. Install and run Graph Notebook - Follow the installation instructions in https://github.com/aws/graph-notebook
-4. View all graph items with their properties and connections - Execute the following command in jupyter (after initializing graph connection described in graph notebook's documentation):
-```
-%%gremlin -p v,oute,inv
+**Graph notebook** image is available on DockerHub: https://hub.docker.com/repository/docker/barrman/graph-notebook and on GitHub: https://github.com/BarrMan/graph-notebook-docker
 
-g.V().outE().inV().path().by(valueMap('phrase').with(WithOptions.tokens))
-```
-5. Re-run the server, and execute the gremlin command in jupyter as needed.
+**Gremlin server** image is available on DockerHub: https://hub.docker.com/repository/docker/barrman/gremlin-server and on GitHub: https://github.com/BarrMan/gremlin-server
+
+> `DocumentDiffStrategy` adds vertexes and edges to the graph and changes will be committed after each diff iteration.
