@@ -1,26 +1,27 @@
 import { createUseStyles } from 'react-jss';
 
-const lineStyle = {
+const lineStyle = (theme) => ({
   borderBottom: '1px #E1E4E8 dashed',
   boxSizing: 'border-box',
   width: '100%',
   paddingLeft: 5,
-};
+  height: theme.lineHeight,
+});
 
 export default createUseStyles((theme) => ({
   diffSection: {
     border: '1px solid #E1E4E8',
     borderRadius: 5,
     minHeight: '100%',
-    width: 'calc(50% - 20px - 150px)',
-    lineHeight: '20px',
+    width: `calc(50% - ${theme.lineHeight} - 150px)`,
+    lineHeight: theme.lineHeight,
     boxSizing: 'border-box',
     marginTop: 60,
     float: 'left',
     marginLeft: 10,
   },
-  lineCount: lineStyle,
-  line: lineStyle,
+  lineCount: lineStyle(theme),
+  line: lineStyle(theme),
   codeSection: {
     float: 'left',
     width: 'calc(100% - 50px)',
