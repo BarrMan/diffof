@@ -37,8 +37,8 @@ app.get('/diff', async (req: Request, res: Response) => {
   console.log('calculating diffs...');
   const documentsDiffStrategy = new DocumentDiffStrategy();
 
-  const prevFile = 'missing_documents';
-  const nextFile = 'missing_documents';
+  const prevFile = 'dummy';
+  const nextFile = 'dummy';
   const prev = await (await import(`../dump/prev/${prevFile}.json`)).default;
   const next = await (await import(`../dump/next/${nextFile}.json`)).default;
 
