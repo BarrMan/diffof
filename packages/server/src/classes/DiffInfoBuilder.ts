@@ -58,14 +58,14 @@ export default class DiffInfoBuilder implements IDiffInfo {
   public concat(diffInfo: DiffInfoBuilder): void {
     if (diffInfo.stackPreviousLine.diffPhrases.length) {
       this.currentParagraph.addPhrases(diffInfo.stackPreviousLine.diffPhrases);
-    } else {
-      diffInfo.paragraphs.forEach((paragraph) => {
-        if (paragraph.content.length) {
-          console.log('concating paragraphs');
-          paragraph.debug();
-          this.currentParagraph.addParagraph(paragraph);
-        }
-      });
-    }
+    } 
+
+    diffInfo.paragraphs.forEach((paragraph) => {
+      if (paragraph.content.length) {
+        paragraph.debug();
+        this.currentParagraph.addParagraph(paragraph);
+        this.currentParagraph.closeParagraph();
+      }
+    });
   }
 }

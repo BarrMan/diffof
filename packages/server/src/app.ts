@@ -9,6 +9,7 @@ const app: express.Application = express();
 app.use(express.json());
 
 if (process.env.GRAPH_ENABLED === 'true') {
+  console.log('Graph debugging enabled');
   GraphBuilder.enable();
 }
 
@@ -36,13 +37,15 @@ app.get('/diff', async (req: Request, res: Response) => {
   console.log('calculating diffs...');
   const documentsDiffStrategy = new DocumentDiffStrategy();
 
-  const prev = await (await import('../dump/prev/collection.json')).default;
-  const next = await (await import('../dump/next/collection.json')).default;
+  const prevFile = 'missing_documents';
+  const nextFile = 'missing_documents';
+  const prev = await (await import(`../dump/prev/${prevFile}.json`)).default;
+  const next = await (await import(`../dump/next/${nextFile}.json`)).default;
 
   console.log('prev', prev);
   console.log('next', next);
   const diffPairs = documentsDiffStrategy.getDiffPairs(prev, next, {
-    uniqueKey: 'uniqueKey'
+    uniqueKey: 'id'
   });
   const diffRes = documentsDiffStrategy.getDiffs(diffPairs);
 

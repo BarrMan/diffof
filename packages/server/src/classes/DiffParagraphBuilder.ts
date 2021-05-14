@@ -24,6 +24,7 @@ export class DiffParagraphBuilder implements IParagraph {
   public currentLine: DiffLineBuilder;
 
   constructor(public indent = 0, parent?: IParagraph | IDiffInfo) {
+    console.log('created paragraph', this.id);
     this.parent = parent;
 
     GraphBuilder.addV(this.graphId);
@@ -72,6 +73,9 @@ export class DiffParagraphBuilder implements IParagraph {
   }
 
   closeParagraph(): void {
+    console.log(`Closing paragraph p${this.id}`);
+    this.debug();
+
     this.setCurrentParagraph(this.parent);
   }
 
@@ -89,7 +93,7 @@ export class DiffParagraphBuilder implements IParagraph {
     let output = '';
     this.content.forEach(c => {
       if (c instanceof DiffParagraphBuilder) output += `p${c.id}`;
-      else if(c instanceof DiffLineBuilder) output += c.diffPhrases.map(phr => phr.phrase).join('');
+      else if(c instanceof DiffLineBuilder) output += c.diffPhrases.map(phr => phr.phrase).join('') + '\\n';
     });
     console.log(`paragraph debug [id=${this.id}]`,output);
   }

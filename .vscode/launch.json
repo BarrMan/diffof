@@ -17,10 +17,6 @@
             ],
             "program": "${workspaceFolder}/packages/server/src/server.ts",
             "sourceMaps": true,
-            // "smartStep": true,
-            // "outFiles": [
-            //     "${workspaceFolder/packages/server/dist/**/*.js"
-            // ],
             "protocol": "inspector",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "npm: build"

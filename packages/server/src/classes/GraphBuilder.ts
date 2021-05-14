@@ -6,6 +6,8 @@ export class GraphBuilder {
 
     static enabled = false;
 
+    static logInfo = process.env.GRAPH_LOG_INFO === 'true';
+
     static g: any;
 
     static enable(): void {
@@ -21,7 +23,9 @@ export class GraphBuilder {
             
             let v = GraphBuilder.g.addV(label);
 
-            console.info(actionInfo);
+            if (GraphBuilder.logInfo) {
+                console.info(actionInfo);
+            }
 
             Object.entries(properties).forEach(([propertyKey, propertyValue]) => {
                 v = v.property(propertyKey, propertyValue);
@@ -34,7 +38,10 @@ export class GraphBuilder {
     static addE(label: string, fromVLabel: string, toVLabel: string): void {
         if (GraphBuilder.enabled) {
             const actionInfo = `Adding Edge. Label=${label}, fromLabel=${fromVLabel}, toLabel=${toVLabel}`;
-            console.info(actionInfo);
+
+            if (GraphBuilder.logInfo) {
+                console.info(actionInfo);
+            }
     
             GraphBuilder.stack.push([actionInfo, GraphBuilder.g.V().hasLabel(fromVLabel).addE(label).to(GraphBuilder.g.V().hasLabel(toVLabel)).next()]);
         }

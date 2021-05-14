@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DiffKind, PhraseSymbolCharacters } from '@barrman/diffof-common';
@@ -66,6 +67,10 @@ const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine
 
           lineCount++;
           const currentLineCount = lineCount - 1;
+          const shouldRenderLine = paragraphContent.diffKind
+            ? renderDiffPhrase[sectionType][paragraphContent.diffKind]
+            : true;
+
           return (
             <div
               key={currentLineCount}
@@ -78,8 +83,11 @@ const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine
               onBlur={() => {}}
               title={paragraph.id}
             >
-              {renderIndentation(paragraph.indent + indent)}
-              {renderPhrases(paragraphContent.diffPhrases)}
+              {/* {paragraphContent.diffKind ? renderDiffPhrase[sectionType] : true && '1'} */}
+              {shouldRenderLine
+                ? [renderIndentation(paragraph.indent + indent), renderPhrases(paragraphContent.diffPhrases)]
+                : ' '}
+              {/* {renderIndentation(paragraph.indent + indent)} {renderPhrases(paragraphContent.diffPhrases)} */}
             </div>
           );
         })}

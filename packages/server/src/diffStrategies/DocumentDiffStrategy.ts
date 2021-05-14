@@ -33,13 +33,13 @@ export default class DocumentDiffStrategy
     return Object.entries(prevHashes)
       .map(([key, value]) => ({
         prev: value,
-        next: nextHashes[key] || {},
+        next: nextHashes[key],
       }))
       .concat(
         Object.entries(nextHashes)
           .filter(([key]) => !prevHashes[key])
           .map(([, val]) => ({
-            prev: {},
+            prev: undefined,
             next: val,
           }))
       );
@@ -86,14 +86,23 @@ export default class DocumentDiffStrategy
     const getDiffKind =
       typeof diffKind === "function" ? diffKind : () => diffKind;
 
-    if (Array.isArray(obj)) {
+      if (!obj) {
+        return diffInfo;
+      }
+      else if (obj instanceof KeyVal) {
+        diffInfo.addLine();
+        diffInfo.currentParagraph.addPhrase(`${obj.key}: `);
+        diffInfo.concat(this.render(diffKind, obj.val));
+      } else if (Array.isArray(obj)) {
       diffInfo
         .addLine(getDiffKind())
-        .addPhrase(new StringPhrase("["))
-        .addIndent();
-      obj.forEach((item) =>
-        diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase(`${item},`))
-      );
+        .addPhrase(new StringPhrase("["));
+      diffInfo.addParagraph(new DiffParagraphBuilder(1));
+      obj.forEach((item) => {
+          diffInfo.addLine(getDiffKind());
+          diffInfo.currentParagraph.addPhrase(new StringPhrase(`${item},`))
+      });
+      diffInfo.closeParagraph();
       diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase("]"));
     } else if (typeof obj === "object") {
       diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase("{"));
@@ -137,18 +146,18 @@ export default class DocumentDiffStrategy
       // same type
       if (Array.isArray(prev)) {
         diffInfo.addLine().addPhrase("[");
-        diffInfo.addParagraph(new DiffParagraphBuilder(1));
+        diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
         prev.forEach((prevItem) => {
           // TODO: Add complex array types
           if ((next as any[]).indexOf(prevItem) === -1) {
-            diffInfo.addLine(DiffKind.REMOVED).addPhrase(prevItem);
+            diffInfo.addLine(DiffKind.REMOVED).addPhrase(new StringPhrase(prevItem)).addPhrase(',');
           } else {
-            diffInfo.addLine().addPhrase(prevItem);
+            diffInfo.addLine().addPhrase(new StringPhrase(prevItem)).addPhrase(',');
           }
         });
         (next as any[]).forEach((nextItem) => {
           if (prev.indexOf(nextItem) === -1) {
-            diffInfo.addLine(DiffKind.ADDED).addPhrase(nextItem);
+            diffInfo.addLine(DiffKind.ADDED).addPhrase(new StringPhrase(nextItem)).addPhrase(',');
           }
         });
         diffInfo.closeParagraph();
@@ -191,13 +200,67 @@ export default class DocumentDiffStrategy
       }
     }
 
+    console.log('done evaluting');
+    diffInfo.currentParagraph.debug();
+
+    return diffInfo;
+  }
+
+  private getNestedDiffInfoWithConcat() { // TODO: Move to tests
+    const diffInfo = new DiffInfoBuilder();
+
+    diffInfo.addLine();
+    diffInfo.currentParagraph.addPhrase('{');
+    diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
+    diffInfo.currentParagraph.addLine();
+    diffInfo.currentParagraph.addPhrase('hello: ');
+    diffInfo.currentParagraph.addPhrase('{');
+    diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
+
+    const nestedDiffInfo = new DiffInfoBuilder();
+
+    nestedDiffInfo.currentParagraph.addLine();
+    nestedDiffInfo.currentParagraph.addPhrase('key: value');
+    diffInfo.concat(nestedDiffInfo);
+
+    diffInfo.currentParagraph.closeParagraph();
+    diffInfo.currentParagraph.addLine();
+    diffInfo.currentParagraph.addPhrase('}');
+    diffInfo.currentParagraph.closeParagraph();
+    diffInfo.currentParagraph.addLine();
+    diffInfo.currentParagraph.addPhrase('}');
+
+    return diffInfo;
+  }
+
+  private getNestedDiffInfoWithoutConcat() { // TODO: Move to tests
+    const diffInfo = new DiffInfoBuilder();
+    diffInfo.addLine();
+    diffInfo.currentParagraph.addPhrase('{');
+    diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
+    diffInfo.currentParagraph.addLine();
+    diffInfo.currentParagraph.addPhrase('hello: ');
+    diffInfo.currentParagraph.addPhrase('{');
+    diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
+    diffInfo.currentParagraph.addLine();
+    diffInfo.currentParagraph.addPhrase('key: value');
+    diffInfo.currentParagraph.closeParagraph();
+    diffInfo.currentParagraph.addLine();
+    diffInfo.currentParagraph.addPhrase('}');
+    diffInfo.currentParagraph.closeParagraph();
+    diffInfo.currentParagraph.addLine();
+    diffInfo.currentParagraph.addPhrase('}');
+
     return diffInfo;
   }
 
   private evaluateDocumentDiffs = (
     diffState: IDiffState<DocumentType>
   ): IDiffInfo => {
-    return this.evalulatePropertyDiffs(diffState.prev, diffState.next);
+    const diffInfo = this.evalulatePropertyDiffs(diffState.prev, diffState.next);
+    // const diffInfo = this.getNestedDiffInfoWithConcat();
+    // diffInfo.currentParagraph.debug();
+    return diffInfo;
   };
 
   fileMask = "json";

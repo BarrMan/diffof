@@ -1,7 +1,10 @@
 [
   {
-    "nested": {
-        "a": 1
+    "id": 1,
+    "name": "imri",
+    "object": {
+      "key1": "key1",
+      "key2": "key2"
     }
   }
 ]

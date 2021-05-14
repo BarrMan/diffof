@@ -11,6 +11,7 @@
     "bootstrap": "lerna exec npm install",
     "pregraph:debug": "./packages/server/debug/init-graph.sh",
     "graph:debug": "GRAPH_ENABLED=true npm start",
-    "postgraph:debug": "./packages/server/debug/terminate-graph.sh"
-  }
+    "graph:debug:teardown": "./packages/server/debug/terminate-graph.sh"
+  },
+  "dependencies": {}
 }
