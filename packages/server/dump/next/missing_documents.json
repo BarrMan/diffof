@@ -1,6 +1,7 @@
 [
     {
         "id": 1,
-        "name": "missing"
+        "name": "missing",
+        "array": ["1",2, "3"]
     }
 ]

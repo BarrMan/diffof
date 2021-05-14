@@ -1,6 +1,7 @@
 import { keyBy } from "lodash";
 import {
   StringPhrase,
+  ValuePhrase,
   SymbolPhrase,
   PhraseSymbolCharacters,
 } from "@barrman/diffof-common";
@@ -97,15 +98,16 @@ export default class DocumentDiffStrategy
       diffInfo
         .addLine(getDiffKind())
         .addPhrase(new StringPhrase("["));
-      diffInfo.addParagraph(new DiffParagraphBuilder(1));
+      diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
       obj.forEach((item) => {
           diffInfo.addLine(getDiffKind());
-          diffInfo.currentParagraph.addPhrase(new StringPhrase(`${item},`))
+          diffInfo.currentParagraph.addPhrase(new ValuePhrase(item)).addPhrase(',');
       });
       diffInfo.closeParagraph();
       diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase("]"));
     } else if (typeof obj === "object") {
       diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase("{"));
+      diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
       Object.entries(obj).forEach(([key, val]) => {
         const line = diffInfo
           .addLine(getDiffKind())
@@ -113,16 +115,17 @@ export default class DocumentDiffStrategy
         if (isPrimitiveType(val)) {
           line.addPhrases([
             new SymbolPhrase(PhraseSymbolCharacters.SPACE),
-            new StringPhrase(val),
+            new ValuePhrase(val),
             new StringPhrase(","),
           ]);
         } else {
           diffInfo.concat(this.render(diffKind, val));
         }
       });
+      diffInfo.closeParagraph();
       diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase("}"));
     } else {
-      diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase(obj));
+      diffInfo.addLine(getDiffKind()).addPhrase(new ValuePhrase(obj));
     }
 
     return diffInfo;
@@ -150,14 +153,14 @@ export default class DocumentDiffStrategy
         prev.forEach((prevItem) => {
           // TODO: Add complex array types
           if ((next as any[]).indexOf(prevItem) === -1) {
-            diffInfo.addLine(DiffKind.REMOVED).addPhrase(new StringPhrase(prevItem)).addPhrase(',');
+            diffInfo.addLine(DiffKind.REMOVED).addPhrase(new ValuePhrase(prevItem)).addPhrase(',');
           } else {
-            diffInfo.addLine().addPhrase(new StringPhrase(prevItem)).addPhrase(',');
+            diffInfo.addLine().addPhrase(new ValuePhrase(prevItem)).addPhrase(',');
           }
         });
         (next as any[]).forEach((nextItem) => {
           if (prev.indexOf(nextItem) === -1) {
-            diffInfo.addLine(DiffKind.ADDED).addPhrase(new StringPhrase(nextItem)).addPhrase(',');
+            diffInfo.addLine(DiffKind.ADDED).addPhrase(new ValuePhrase(nextItem)).addPhrase(',');
           }
         });
         diffInfo.closeParagraph();
@@ -191,10 +194,10 @@ export default class DocumentDiffStrategy
         currentParagraph.debug();
       } else {
         if (prev !== next) {
-          diffInfo.addPhrase(new StringPhrase(prev, DiffKind.REMOVED));
-          diffInfo.addPhrase(new StringPhrase(next, DiffKind.ADDED));
+          diffInfo.addPhrase(new ValuePhrase(prev, DiffKind.REMOVED));
+          diffInfo.addPhrase(new ValuePhrase(next, DiffKind.ADDED));
         } else {
-          diffInfo.addPhrase(new StringPhrase(prev));
+          diffInfo.addPhrase(new ValuePhrase(prev));
         }
         diffInfo.addPhrase(",");
       }
