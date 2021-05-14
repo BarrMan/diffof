@@ -35,7 +35,10 @@ app.get('/diff', async (req: Request, res: Response) => {
   }
 
   console.log('calculating diffs...');
-  const documentsDiffStrategy = new DocumentDiffStrategy();
+  const documentsDiffStrategy = new DocumentDiffStrategy({
+    uniqueKey: 'id',
+    arraysByIndexOnly: false
+  });
 
   const prevFile = 'dummy';
   const nextFile = 'dummy';
@@ -44,9 +47,7 @@ app.get('/diff', async (req: Request, res: Response) => {
 
   console.log('prev', prev);
   console.log('next', next);
-  const diffPairs = documentsDiffStrategy.getDiffPairs(prev, next, {
-    uniqueKey: 'id'
-  });
+  const diffPairs = documentsDiffStrategy.getDiffPairs(prev, next);
   const diffRes = documentsDiffStrategy.getDiffs(diffPairs);
 
   await GraphBuilder.commit();

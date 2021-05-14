@@ -83,11 +83,10 @@ const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine
               onBlur={() => {}}
               title={paragraph.id}
             >
-              {/* {paragraphContent.diffKind ? renderDiffPhrase[sectionType] : true && '1'} */}
-              {shouldRenderLine
-                ? [renderIndentation(paragraph.indent + indent), renderPhrases(paragraphContent.diffPhrases)]
-                : ' '}
-              {/* {renderIndentation(paragraph.indent + indent)} {renderPhrases(paragraphContent.diffPhrases)} */}
+              {shouldRenderLine && [
+                renderIndentation(paragraph.indent + indent),
+                renderPhrases(paragraphContent.diffPhrases),
+              ]}
             </div>
           );
         })}

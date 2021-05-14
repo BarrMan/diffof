@@ -1,6 +1,6 @@
 [
     {
-      "_id": "609e8bb05040b91c21587194",
+      "id": "609e8bb05040b91c21587194",
       "index": 0,
       "guid": "4959a280-82c3-460f-95a4-78adc38e5b01",
       "isActive": false,
@@ -34,7 +34,7 @@
       "favoriteFruit": "strawberry"
     },
     {
-      "_id": "609e8bb0707681d69309c23b",
+      "id": "609e8bb0707681d69309c23b",
       "index": 1,
       "guid": "9aca8be1-c7d2-48a1-aef7-c38c12cc99fe",
       "isActive": false,
@@ -42,19 +42,16 @@
         "labore",
         "proident",
         "ad",
-        "culpa",
-        "ut",
-        "ex",
-        "id"
+        "culpa"
       ],
       "friends": [
         {
           "id": 0,
-          "name": "Marisol Valentine"
+          "name": "Narkis Midburn"
         },
         {
           "id": 1,
-          "name": "Langley Hughes"
+          "name": "Omri Ron"
         },
         {
           "id": 2,
@@ -68,7 +65,7 @@
       "favoriteFruit": "apple"
     },
     {
-      "_id": "609e8bb0ed74f57351a7980b",
+      "id": "609e8bb0ed74f57351a7980b",
       "index": 2,
       "guid": "777d161a-3247-4ab7-8e0d-2a2c3e1a313a",
       "isActive": false,
@@ -102,7 +99,7 @@
       "favoriteFruit": "strawberry"
     },
     {
-      "_id": "609e8bb0053d3cd4774e951b",
+      "id": "609e8bb0053d3cd4774e951b",
       "index": 3,
       "guid": "d90e5d27-e91f-4220-9dd8-c2954a4ec189",
       "isActive": false,
@@ -136,7 +133,7 @@
       "favoriteFruit": "apple"
     },
     {
-      "_id": "609e8bb0517adb6422deb0b7",
+      "id": "609e8bb0517adb6422deb0b7",
       "index": 4,
       "guid": "06f846de-fc81-4dbd-834d-4a8c194ddd1f",
       "isActive": true,
@@ -170,7 +167,7 @@
       "favoriteFruit": "banana"
     },
     {
-      "_id": "609e8bb01fe22916f86e94d6",
+      "id": "609e8bb01fe22916f86e94d6",
       "index": 5,
       "guid": "c6cac745-1c56-4c11-88c2-03bff2028f6f",
       "isActive": false,
@@ -204,7 +201,7 @@
       "favoriteFruit": "banana"
     },
     {
-      "_id": "609e8bb0116d5cb9b9bb0e92",
+      "id": "609e8bb0116d5cb9b9bb0e92",
       "index": 6,
       "guid": "1c771fad-2888-4604-8424-3424e599a744",
       "isActive": false,

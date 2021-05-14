@@ -21,14 +21,17 @@ import { IDiffLine } from "src/interfaces/IDiffLine";
 type DocumentType = Record<string, unknown>;
 export default class DocumentDiffStrategy
   implements DiffStrategy<DocumentType, IDiffInfo, DocumentDiffOptions> {
+
+    constructor(private diffOptions: DocumentDiffOptions) {
+    }
+
   getDiffPairs = (
     prevCollection: DocumentType[],
     nextCollection: DocumentType[],
-    diffOptions: DocumentDiffOptions
   ): IDiffState<DocumentType>[] => {
     const [prevHashes, nextHashes] = [
-      keyBy(prevCollection, diffOptions.uniqueKey),
-      keyBy(nextCollection, diffOptions.uniqueKey),
+      keyBy(prevCollection, this.diffOptions.uniqueKey),
+      keyBy(nextCollection, this.diffOptions.uniqueKey),
     ];
 
     return Object.entries(prevHashes)
@@ -95,6 +98,7 @@ export default class DocumentDiffStrategy
         diffInfo.currentParagraph.addPhrase(`${obj.key}: `);
         diffInfo.concat(this.render(diffKind, obj.val));
       } else if (Array.isArray(obj)) {
+        // Array
       diffInfo
         .addLine(getDiffKind())
         .addPhrase(new StringPhrase("["));
@@ -147,35 +151,50 @@ export default class DocumentDiffStrategy
       diffInfo.concat(this.render(DiffKind.ADDED, next));
     } else {
       // same type
-      if (Array.isArray(prev)) {
+      if (Array.isArray(prev) && Array.isArray(next)) {
         diffInfo.addLine().addPhrase("[");
         diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
-        prev.forEach((prevItem) => {
-          // TODO: Add complex array types
-          if ((next as any[]).indexOf(prevItem) === -1) {
-            diffInfo.addLine(DiffKind.REMOVED).addPhrase(new ValuePhrase(prevItem)).addPhrase(',');
+
+        const byIndex = this.diffOptions.arraysByIndexOnly || prev.some(prevItem => !isPrimitiveType(prevItem)) || next.some(nextItem => !isPrimitiveType(nextItem));
+
+        prev.forEach((prevItem, index) => {
+          if (byIndex) {
+            diffInfo.concat(this.evalulatePropertyDiffs(prevItem, next[index]));
           } else {
-            diffInfo.addLine().addPhrase(new ValuePhrase(prevItem)).addPhrase(',');
+            if ((next).indexOf(prevItem) === -1) {
+              diffInfo.addLine(DiffKind.REMOVED).addPhrase(new ValuePhrase(prevItem)).addPhrase(',');
+            } else {
+              diffInfo.addLine().addPhrase(new ValuePhrase(prevItem)).addPhrase(',');
+            }
           }
         });
-        (next as any[]).forEach((nextItem) => {
-          if (prev.indexOf(nextItem) === -1) {
-            diffInfo.addLine(DiffKind.ADDED).addPhrase(new ValuePhrase(nextItem)).addPhrase(',');
+        if (byIndex) {
+
+          if (next.length > prev.length) {
+            next.slice(prev.length, next.length).forEach(nextItem => {
+              this.render(DiffKind.ADDED, nextItem);
+            });
           }
-        });
+        } else {
+          (next).forEach((nextItem) => {
+            if (prev.indexOf(nextItem) === -1) {
+              diffInfo.addLine(DiffKind.ADDED).addPhrase(new ValuePhrase(nextItem)).addPhrase(',');
+            }
+          });
+        }
         diffInfo.closeParagraph();
         diffInfo.addLine().addPhrase("]");
       } else if (prev instanceof KeyVal && next instanceof KeyVal) {
         diffInfo.addLine().addPhrase(`${prev.key}: `);
         diffInfo.concat(this.evalulatePropertyDiffs(prev.val, next.val));
         diffInfo.addPhrase(",");
-      } else if (typeof prev === "object") {
+      } else if (typeof prev === "object" && typeof next === 'object') {
         diffInfo.addLine().addPhrase("{");
         diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
         console.log('Opened paragraph');
         diffInfo.currentParagraph.debug();
         Object.entries(prev).forEach(([prevKey, prevVal]) => {
-          if (!next[prevKey]) {
+          if (!(prevKey in next)) {
             diffInfo.concat(
               this.render(DiffKind.REMOVED, new KeyVal(prevKey, prevVal))
             );
