@@ -26,6 +26,16 @@ Min required node version: 12>
 1. Install this package globally: `npm i -g diffof`
 2. `diffof file1.txt file2.txt`
 
+```
+Usage: diffof [options] [prevFilePath] [nextFilePath]
+
+Options:
+  --help               Show help                                       [boolean]
+  --version            Show version number                             [boolean]
+  --cp, --client-port  Client's port                                    [number]
+  --sp, --server-port  Servers's port                                   [number]
+```
+
 ### Debugging
 #### VSCode
 Debugging the server using VSCode is as simple as running `Debug server` configuration set in `.vscode/launch.json`. After that, set the breakpoints in the `.ts` files.
