@@ -30,7 +30,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0"
   },
-  "gitHead": "145657aac73c77899760581d61279f18a423930d",
+  "gitHead": "a1cad19f947c185819b8ae4771172ce4d8b4cba9",
   "publishConfig": {
     "access": "public"
   },
