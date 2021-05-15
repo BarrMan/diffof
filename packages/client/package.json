@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "eslint": "eslint"
   },
-  "author": "",
+  "author": "Imri Barr",
   "license": "ISC",
   "dependencies": {
     "@barrman/diffof-common": "^3.0.1",
