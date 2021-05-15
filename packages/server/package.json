@@ -1,6 +1,6 @@
 {
   "name": "@barrman/diffof-server",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "",
   "main": "dist/server.js",
   "scripts": {
