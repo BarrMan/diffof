@@ -46,8 +46,6 @@ export const initApp = (prevSource: string, nextSource: string): void => {
     const prev = await (await import(prevSource)).default;
     const next = await (await import(nextSource)).default;
 
-    console.log("prev", prev);
-    console.log("next", next);
     const diffPairs = documentsDiffStrategy.getDiffPairs(prev, next);
     const diffRes = documentsDiffStrategy.getDiffs(diffPairs);
 
