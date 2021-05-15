@@ -14,10 +14,7 @@ const StickyMenu = ({ classes, loading, totalDocuments }) => (
         &nbsp;Previous documents
       </FancyButton>
       <div className={classes.middleHeaderSection}>{loading ? <div className={classes.loader} /> : <Header />}</div>
-      <div className={classes.documentsInfo}>
-        Showing
-        {totalDocuments}
-      </div>
+      <div className={classes.documentsInfo}>Showing &nbsp;{totalDocuments}</div>
     </nav>
   </div>
 );

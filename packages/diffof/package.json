@@ -13,7 +13,9 @@
   },
   "dependencies": {
     "@barrman/diffof-client": "^3.0.6",
-    "@barrman/diffof-server": "^3.0.4"
+    "@barrman/diffof-common": "^3.0.4",
+    "@barrman/diffof-server": "^3.0.4",
+    "yargs": "^17.0.1"
   },
   "gitHead": "a1cad19f947c185819b8ae4771172ce4d8b4cba9"
 }

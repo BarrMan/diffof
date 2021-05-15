@@ -1,4 +1,4 @@
-import { keyBy } from "lodash";
+import { keyBy, isEqual } from "lodash";
 import {
   StringPhrase,
   ValuePhrase,
@@ -21,13 +21,11 @@ import { IDiffLine } from "src/interfaces/IDiffLine";
 type DocumentType = Record<string, unknown>;
 export default class DocumentDiffStrategy
   implements DiffStrategy<DocumentType, IDiffInfo, DocumentDiffOptions> {
-
-    constructor(private diffOptions: DocumentDiffOptions) {
-    }
+  constructor(private diffOptions: DocumentDiffOptions) {}
 
   getDiffPairs = (
     prevCollection: DocumentType[],
-    nextCollection: DocumentType[],
+    nextCollection: DocumentType[]
   ): IDiffState<DocumentType>[] => {
     const [prevHashes, nextHashes] = [
       keyBy(prevCollection, this.diffOptions.uniqueKey),
@@ -39,6 +37,7 @@ export default class DocumentDiffStrategy
         prev: value,
         next: nextHashes[key],
       }))
+      .filter((pair) => !isEqual(pair.prev, pair.next) || !pair.next)
       .concat(
         Object.entries(nextHashes)
           .filter(([key]) => !prevHashes[key])
@@ -90,22 +89,21 @@ export default class DocumentDiffStrategy
     const getDiffKind =
       typeof diffKind === "function" ? diffKind : () => diffKind;
 
-      if (!obj) {
-        return diffInfo;
-      }
-      else if (obj instanceof KeyVal) {
-        diffInfo.addLine();
-        diffInfo.currentParagraph.addPhrase(`${obj.key}: `);
-        diffInfo.concat(this.render(diffKind, obj.val));
-      } else if (Array.isArray(obj)) {
-        // Array
-      diffInfo
-        .addLine(getDiffKind())
-        .addPhrase(new StringPhrase("["));
+    if (!obj) {
+      return diffInfo;
+    } else if (obj instanceof KeyVal) {
+      diffInfo.addLine();
+      diffInfo.currentParagraph.addPhrase(`${obj.key}: `);
+      diffInfo.concat(this.render(diffKind, obj.val));
+    } else if (Array.isArray(obj)) {
+      // Array
+      diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase("["));
       diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
       obj.forEach((item) => {
-          diffInfo.addLine(getDiffKind());
-          diffInfo.currentParagraph.addPhrase(new ValuePhrase(item)).addPhrase(',');
+        diffInfo.addLine(getDiffKind());
+        diffInfo.currentParagraph
+          .addPhrase(new ValuePhrase(item))
+          .addPhrase(",");
       });
       diffInfo.closeParagraph();
       diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase("]"));
@@ -155,30 +153,41 @@ export default class DocumentDiffStrategy
         diffInfo.addLine().addPhrase("[");
         diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
 
-        const byIndex = this.diffOptions.arraysByIndexOnly || prev.some(prevItem => !isPrimitiveType(prevItem)) || next.some(nextItem => !isPrimitiveType(nextItem));
+        const byIndex =
+          this.diffOptions.arraysByIndexOnly ||
+          prev.some((prevItem) => !isPrimitiveType(prevItem)) ||
+          next.some((nextItem) => !isPrimitiveType(nextItem));
 
         prev.forEach((prevItem, index) => {
           if (byIndex) {
             diffInfo.concat(this.evalulatePropertyDiffs(prevItem, next[index]));
           } else {
-            if ((next).indexOf(prevItem) === -1) {
-              diffInfo.addLine(DiffKind.REMOVED).addPhrase(new ValuePhrase(prevItem)).addPhrase(',');
+            if (next.indexOf(prevItem) === -1) {
+              diffInfo
+                .addLine(DiffKind.REMOVED)
+                .addPhrase(new ValuePhrase(prevItem))
+                .addPhrase(",");
             } else {
-              diffInfo.addLine().addPhrase(new ValuePhrase(prevItem)).addPhrase(',');
+              diffInfo
+                .addLine()
+                .addPhrase(new ValuePhrase(prevItem))
+                .addPhrase(",");
             }
           }
         });
         if (byIndex) {
-
           if (next.length > prev.length) {
-            next.slice(prev.length, next.length).forEach(nextItem => {
+            next.slice(prev.length, next.length).forEach((nextItem) => {
               this.render(DiffKind.ADDED, nextItem);
             });
           }
         } else {
-          (next).forEach((nextItem) => {
+          next.forEach((nextItem) => {
             if (prev.indexOf(nextItem) === -1) {
-              diffInfo.addLine(DiffKind.ADDED).addPhrase(new ValuePhrase(nextItem)).addPhrase(',');
+              diffInfo
+                .addLine(DiffKind.ADDED)
+                .addPhrase(new ValuePhrase(nextItem))
+                .addPhrase(",");
             }
           });
         }
@@ -188,10 +197,10 @@ export default class DocumentDiffStrategy
         diffInfo.addLine().addPhrase(`${prev.key}: `);
         diffInfo.concat(this.evalulatePropertyDiffs(prev.val, next.val));
         diffInfo.addPhrase(",");
-      } else if (typeof prev === "object" && typeof next === 'object') {
+      } else if (typeof prev === "object" && typeof next === "object") {
         diffInfo.addLine().addPhrase("{");
         diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
-        console.log('Opened paragraph');
+        console.log("Opened paragraph");
         diffInfo.currentParagraph.debug();
         Object.entries(prev).forEach(([prevKey, prevVal]) => {
           if (!(prevKey in next)) {
@@ -222,56 +231,58 @@ export default class DocumentDiffStrategy
       }
     }
 
-    console.log('done evaluting');
+    console.log("done evaluting");
     diffInfo.currentParagraph.debug();
 
     return diffInfo;
   }
 
-  private getNestedDiffInfoWithConcat() { // TODO: Move to tests
+  private getNestedDiffInfoWithConcat() {
+    // TODO: Move to tests
     const diffInfo = new DiffInfoBuilder();
 
     diffInfo.addLine();
-    diffInfo.currentParagraph.addPhrase('{');
+    diffInfo.currentParagraph.addPhrase("{");
     diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
     diffInfo.currentParagraph.addLine();
-    diffInfo.currentParagraph.addPhrase('hello: ');
-    diffInfo.currentParagraph.addPhrase('{');
+    diffInfo.currentParagraph.addPhrase("hello: ");
+    diffInfo.currentParagraph.addPhrase("{");
     diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
 
     const nestedDiffInfo = new DiffInfoBuilder();
 
     nestedDiffInfo.currentParagraph.addLine();
-    nestedDiffInfo.currentParagraph.addPhrase('key: value');
+    nestedDiffInfo.currentParagraph.addPhrase("key: value");
     diffInfo.concat(nestedDiffInfo);
 
     diffInfo.currentParagraph.closeParagraph();
     diffInfo.currentParagraph.addLine();
-    diffInfo.currentParagraph.addPhrase('}');
+    diffInfo.currentParagraph.addPhrase("}");
     diffInfo.currentParagraph.closeParagraph();
     diffInfo.currentParagraph.addLine();
-    diffInfo.currentParagraph.addPhrase('}');
+    diffInfo.currentParagraph.addPhrase("}");
 
     return diffInfo;
   }
 
-  private getNestedDiffInfoWithoutConcat() { // TODO: Move to tests
+  private getNestedDiffInfoWithoutConcat() {
+    // TODO: Move to tests
     const diffInfo = new DiffInfoBuilder();
     diffInfo.addLine();
-    diffInfo.currentParagraph.addPhrase('{');
+    diffInfo.currentParagraph.addPhrase("{");
     diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
     diffInfo.currentParagraph.addLine();
-    diffInfo.currentParagraph.addPhrase('hello: ');
-    diffInfo.currentParagraph.addPhrase('{');
+    diffInfo.currentParagraph.addPhrase("hello: ");
+    diffInfo.currentParagraph.addPhrase("{");
     diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
     diffInfo.currentParagraph.addLine();
-    diffInfo.currentParagraph.addPhrase('key: value');
+    diffInfo.currentParagraph.addPhrase("key: value");
     diffInfo.currentParagraph.closeParagraph();
     diffInfo.currentParagraph.addLine();
-    diffInfo.currentParagraph.addPhrase('}');
+    diffInfo.currentParagraph.addPhrase("}");
     diffInfo.currentParagraph.closeParagraph();
     diffInfo.currentParagraph.addLine();
-    diffInfo.currentParagraph.addPhrase('}');
+    diffInfo.currentParagraph.addPhrase("}");
 
     return diffInfo;
   }
@@ -279,7 +290,10 @@ export default class DocumentDiffStrategy
   private evaluateDocumentDiffs = (
     diffState: IDiffState<DocumentType>
   ): IDiffInfo => {
-    const diffInfo = this.evalulatePropertyDiffs(diffState.prev, diffState.next);
+    const diffInfo = this.evalulatePropertyDiffs(
+      diffState.prev,
+      diffState.next
+    );
     // const diffInfo = this.getNestedDiffInfoWithConcat();
     // diffInfo.currentParagraph.debug();
     return diffInfo;

@@ -1,12 +1,15 @@
 /* eslint-disable no-restricted-globals */
 import express, { Request, Response } from "express";
 import cors from "cors";
-import { serverPort } from "@barrman/diffof-common";
 import DocumentDiffStrategy from "./diffStrategies/DocumentDiffStrategy";
 import { resetParagraphIds } from "./classes/DiffParagraphBuilder";
 import { GraphBuilder } from "./classes/GraphBuilder";
 
-export const initApp = (prevSource: string, nextSource: string): void => {
+export const initApp = (
+  port: number,
+  prevSource: string,
+  nextSource: string
+): void => {
   const app: express.Application = express();
 
   app.use(cors());
@@ -51,18 +54,17 @@ export const initApp = (prevSource: string, nextSource: string): void => {
     const diffRes = documentsDiffStrategy.getDiffs(diffPairs);
 
     await GraphBuilder.commit();
-    // const diffRes = getDiffs(fromIndexInt, toIndexInt);
     console.log("done calculating diffs...", diffRes);
 
     const data = {
       documentDiffs: diffRes,
-      totalDocuments: 2,
+      totalDocuments: diffPairs.length,
     };
 
     res.json(data);
   });
 
-  app.listen(serverPort);
+  app.listen(port);
 
-  console.log("app listening on port", serverPort);
+  console.log("app listening on port", port);
 };
