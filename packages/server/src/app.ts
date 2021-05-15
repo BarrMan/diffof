@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-globals */
 import express, { Request, Response } from "express";
 import cors from "cors";
+import { serverPort } from "@barrman/diffof-common";
 import DocumentDiffStrategy from "./diffStrategies/DocumentDiffStrategy";
 import { resetParagraphIds } from "./classes/DiffParagraphBuilder";
 import { GraphBuilder } from "./classes/GraphBuilder";
@@ -61,9 +62,7 @@ export const initApp = (prevSource: string, nextSource: string): void => {
     res.json(data);
   });
 
-  const port = 3001;
+  app.listen(serverPort);
 
-  app.listen(port);
-
-  console.log("app listening on port", port);
+  console.log("app listening on port", serverPort);
 };

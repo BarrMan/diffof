@@ -1,4 +1,5 @@
 import qs from 'qs';
+import { serverPort } from '@barrman/diffof-common';
 
 const withQueryString = (url, queryStringObj) => `${url}${qs.stringify(queryStringObj, { addQueryPrefix: true })}`;
 
@@ -17,7 +18,7 @@ const apiMethods = {
       params.toIndex = toIndex;
     }
 
-    return (await fetch(withQueryString('http://localhost:3001/diff', params))).json();
+    return (await fetch(withQueryString(`http://localhost:${serverPort}/diff`, params))).json();
   },
 };
 
