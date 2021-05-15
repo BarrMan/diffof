@@ -14,6 +14,7 @@
 JSON
 
 ### Installation
+Min required node version: 12>
 
 1. Clone this repo
 2. `npm run bootstrap`
