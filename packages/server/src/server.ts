@@ -1,6 +1,4 @@
-import { Application } from './app';
+import path from 'path';
+import { initApp } from './app';
 
-const port = 3001;
-
-Application.listen(port);
-console.log('app listening on port', port);
+initApp(path.resolve('../dump_old/prev/dummy.json'),path.resolve('../dump_old/prev/dummy.json'));

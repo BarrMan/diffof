@@ -1,5 +1,11 @@
 #!/usr/bin/env node
+const fs = require('fs');
+const path = require('path');
+const { initApp } = require('@barrman/diffof-server/dist/app');
+const { serveClient } = require('@barrman/diffof-client/server');
 
-const [,, args] = process.argv;
+const [,, prev, next] = process.argv;
 
-console.log('hello from cli', args);
+initApp(path.resolve(prev), path.resolve(next));
+
+serveClient();

@@ -17,7 +17,7 @@ const apiMethods = {
       params.toIndex = toIndex;
     }
 
-    return (await fetch(withQueryString('/diff', params))).json();
+    return (await fetch(withQueryString('http://localhost:3001/diff', params))).json();
   },
 };
 
