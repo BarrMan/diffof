@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
 
+const port = 3000;
+
 const serveClient = () => {
   const app = express();
 
@@ -10,11 +12,9 @@ const serveClient = () => {
 
   app.use(express.static(path.resolve(__dirname, 'build')));
 
-  const port = 3000;
-
   app.listen(port);
 
   console.log('Client app started at port', port);
 };
 
-module.exports = { serveClient };
+module.exports = { serveClient, port };
