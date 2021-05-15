@@ -1,6 +1,6 @@
 {
   "name": "@barrman/diffof-server",
-  "version": "3.0.2",
+  "version": "3.0.4",
   "description": "",
   "main": "dist/server.js",
   "scripts": {
@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@barrman/diffof-common": "^3.0.1",
+    "@barrman/diffof-common": "^3.0.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "gremlin": "^3.4.10",
