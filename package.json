@@ -9,6 +9,8 @@
     "start": "lerna run start --stream",
     "start:dev": "lerna run start:dev --stream",
     "bootstrap": "lerna bootstrap",
+    "prepublish": "npm run build",
+    "publish": "lerna publish",
     "pregraph:debug": "./packages/server/debug/init-graph.sh",
     "graph:debug": "GRAPH_ENABLED=true npm start",
     "graph:debug:teardown": "./packages/server/debug/terminate-graph.sh"
