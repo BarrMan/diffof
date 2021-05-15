@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
-
-const port = 3000;
+const { clientPort } = require('@barrman/diffof-common');
 
 const serveClient = () => {
   const app = express();
@@ -12,9 +11,9 @@ const serveClient = () => {
 
   app.use(express.static(path.resolve(__dirname, 'build')));
 
-  app.listen(port);
+  app.listen(clientPort);
 
-  console.log('Client app started at port', port);
+  console.log('Client app started at port', clientPort);
 };
 
-module.exports = { serveClient, port };
+module.exports = { serveClient };
