@@ -1,6 +1,6 @@
 {
   "name": "@barrman/diffof-common",
-  "version": "3.0.12",
+  "version": "3.0.14",
   "description": "",
   "main": "index.ts",
   "scripts": {

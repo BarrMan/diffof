@@ -1,6 +1,6 @@
 {
   "name": "@barrman/diffof-client",
-  "version": "3.0.13",
+  "version": "3.0.14",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "author": "Imri Barr",
   "license": "ISC",
   "dependencies": {
-    "@barrman/diffof-common": "^3.0.12",
+    "@barrman/diffof-common": "^3.0.14",
     "express": "^4.17.1",
     "prop-types": "^15.7.2",
     "qs": "^6.10.1",
