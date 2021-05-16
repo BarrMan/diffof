@@ -1,6 +1,6 @@
 {
   "name": "diffof",
-  "version": "3.0.18",
+  "version": "3.0.19",
   "description": "",
   "main": "cli.js",
   "scripts": {
