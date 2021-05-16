@@ -1,8 +1,7 @@
 const express = require('express');
 const path = require('path');
-const { clientPort } = require('@barrman/diffof-common');
 
-const serveClient = () => {
+const serveClient = (port) => {
   const app = express();
 
   app.get('/', (req, res) => {
@@ -11,13 +10,11 @@ const serveClient = () => {
 
   const serveStaticFilesPath = path.resolve(__dirname, 'build');
 
-  console.log('serving static client files', serveStaticFilesPath);
-
   app.use(express.static(serveStaticFilesPath));
 
-  app.listen(clientPort);
+  app.listen(port);
 
-  console.log('Client app started at port', clientPort);
+  console.log('Client app started at port', port);
 };
 
 module.exports = { serveClient };
