@@ -9,7 +9,7 @@ const { serveClient } = require('@barrman/diffof-client/server');
 
 const argv = yargs(hideBin(process.argv))
  .usage("Usage: diffof [options] [prevFilePath] [nextFilePath]")
- .option("cp", { alias: "client-port", describe: `Client's port (default: ${defaultClientPort}`, type: "number" })
+ .option("cp", { alias: "client-port", describe: `Client's port (default: ${defaultClientPort})`, type: "number" })
  .option("sp", { alias: "server-port", describe: `Servers's port (default: ${defaultServerPort})`, type: "number" })
  .demandCommand(2)
  .argv;

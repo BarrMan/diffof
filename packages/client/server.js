@@ -11,7 +11,7 @@ const serveClient = () => {
 
   const serveStaticFilesPath = path.resolve(__dirname, 'build');
 
-  console.log('servince static client files', serveStaticFilesPath);
+  console.log('serving static client files', serveStaticFilesPath);
 
   app.use(express.static(serveStaticFilesPath));
 
