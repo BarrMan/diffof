@@ -4,6 +4,6 @@ import { initApp } from "./app";
 
 initApp(
   serverPort,
-  path.resolve("../dump_old/prev/dummy.json"),
-  path.resolve("../dump_old/prev/dummy.json")
+  path.resolve(__dirname, "../dump_old/prev/dummy.json"),
+  path.resolve(__dirname, "../dump_old/next/dummy.json")
 );

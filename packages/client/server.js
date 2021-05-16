@@ -9,7 +9,11 @@ const serveClient = () => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
   });
 
-  app.use(express.static(path.resolve(__dirname, 'build')));
+  const serveStaticFilesPath = path.resolve(__dirname, 'build');
+
+  console.log('servince static client files', serveStaticFilesPath);
+
+  app.use(express.static(serveStaticFilesPath));
 
   app.listen(clientPort);
 
