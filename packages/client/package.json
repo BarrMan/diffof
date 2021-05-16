@@ -6,6 +6,7 @@
   "scripts": {
     "start": "react-scripts start",
     "start:dev": "npm run start",
+    "prebuild": "rimraf build",
     "build": "react-scripts build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "eslint": "eslint"
@@ -30,7 +31,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0"
   },
-  "gitHead": "a1cad19f947c185819b8ae4771172ce4d8b4cba9",
+  "gitHead": "fb298ab0c6b4bc662d2cc5b334fada110ec0baef",
   "publishConfig": {
     "access": "public"
   },
