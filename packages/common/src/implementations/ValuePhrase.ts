@@ -5,11 +5,14 @@ import { GraphItem } from "./GraphItem";
 type ValueType = string | number;
 
 export class ValuePhrase implements IDiffPhrase<ValueType>, GraphItem {
-    public phrase;
+  public phrase;
 
-    constructor(private _phrase: ValueType, public diffKind?: DiffKind) {
-        this.phrase = typeof _phrase === 'string' ? `"${_phrase}"` : _phrase.toString();
-    }
+  constructor(private _phrase: ValueType, public diffKind?: DiffKind) {
+    this.phrase =
+      typeof _phrase === "string"
+        ? `"${_phrase}"`
+        : new String(_phrase).toString();
+  }
 
-    graphId: string = `ValuePhrase-${Math.ceil(Math.random()*100).toString()}`;
+  graphId: string = `ValuePhrase-${Math.ceil(Math.random() * 100).toString()}`;
 }

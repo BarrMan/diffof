@@ -1,4 +1,4 @@
-import { keyBy, isEqual } from "lodash";
+import { keyBy, isEqual, isNil, isObject } from "lodash";
 import {
   StringPhrase,
   ValuePhrase,
@@ -17,8 +17,6 @@ import { KeyVal } from "../classes/KeyVal";
 import { DiffParagraphBuilder } from "../classes/DiffParagraphBuilder";
 import { IParagraph } from "src/interfaces/IParagraph";
 import { IDiffLine } from "src/interfaces/IDiffLine";
-
-const isNullOrUndefined = (val) => val === null || val === undefined;
 
 type DocumentType = Record<string, unknown>;
 export default class DocumentDiffStrategy
@@ -109,7 +107,7 @@ export default class DocumentDiffStrategy
       });
       diffInfo.closeParagraph();
       diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase("]"));
-    } else if (typeof obj === "object") {
+    } else if (isObject(obj)) {
       diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase("{"));
       diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
       Object.entries(obj).forEach(([key, val]) => {
@@ -143,7 +141,7 @@ export default class DocumentDiffStrategy
 
     if (
       typeof prev !== typeof next ||
-      isNullOrUndefined(prev) !== isNullOrUndefined(next) ||
+      isNil(prev) !== isNil(next) ||
       Array.isArray(prev) !== Array.isArray(next)
     ) {
       // unmatches types
@@ -200,7 +198,7 @@ export default class DocumentDiffStrategy
         diffInfo.addLine().addPhrase(`${prev.key}: `);
         diffInfo.concat(this.evalulatePropertyDiffs(prev.val, next.val));
         diffInfo.addPhrase(",");
-      } else if (typeof prev === "object" && typeof next === "object") {
+      } else if (isObject(prev) && isObject(next)) {
         diffInfo.addLine().addPhrase("{");
         diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
         console.log("Opened paragraph");
