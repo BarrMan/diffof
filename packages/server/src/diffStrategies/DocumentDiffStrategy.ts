@@ -216,7 +216,14 @@ export default class DocumentDiffStrategy
             diffInfo.concat(nestedDiffs);
           }
         });
-        // TODO: loop through all entries of next
+
+        Object.entries(next).forEach(([nextKey, nextVal]) => {
+          if (!(nextKey in prev)) {
+            diffInfo.concat(
+              this.render(DiffKind.REMOVED, new KeyVal(nextKey, nextVal))
+            );
+          }
+        });
         const currentParagraph = diffInfo.closeParagraph();
         diffInfo.addLine().addPhrase("}");
         currentParagraph.debug();
