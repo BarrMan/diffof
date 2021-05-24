@@ -18,6 +18,8 @@ import { DiffParagraphBuilder } from "../classes/DiffParagraphBuilder";
 import { IParagraph } from "src/interfaces/IParagraph";
 import { IDiffLine } from "src/interfaces/IDiffLine";
 
+const isNullOrUndefined = (val) => val === null || val === undefined;
+
 type DocumentType = Record<string, unknown>;
 export default class DocumentDiffStrategy
   implements DiffStrategy<DocumentType, IDiffInfo, DocumentDiffOptions> {
@@ -141,6 +143,7 @@ export default class DocumentDiffStrategy
 
     if (
       typeof prev !== typeof next ||
+      isNullOrUndefined(prev) !== isNullOrUndefined(next) ||
       Array.isArray(prev) !== Array.isArray(next)
     ) {
       // unmatches types
