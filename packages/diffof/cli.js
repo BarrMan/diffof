@@ -14,24 +14,26 @@ const argv = yargs(hideBin(process.argv))
   .usage("Usage: diffof [options] [prevFilePath] [nextFilePath]")
   .option("cp", {
     alias: "client-port",
-    describe: `Client's port (default: ${defaultClientPort})`,
+    describe: `Client's port`,
     type: "number",
+    default: defaultClientPort
   })
   .option("sp", {
     alias: "server-port",
-    describe: `Servers's port (default: ${defaultServerPort})`,
+    describe: `Server's port`,
     type: "number",
+    default: defaultServerPort
   })
   .option("uk", {
     alias: "unique-key",
     describe:
-      'Unique identifier of each document in the collection for pairing between prev collection and next collection (default: "id")',
+      'Unique identifier of each document in the collection for pairing between prev collection and next collection',
     type: "string",
     default: "id",
   })
   .option("arraysByIndexOnly", {
     describe:
-      'Compares arrays by its indexes, order matters. If set to false, will try to compare by values. If values are complex types, will fallback to arraysByIndexOnly set to true (default: "false")',
+      'Compares arrays by its indexes, order matters. If set to false, will try to compare by values. If values are complex types, will fallback to arraysByIndexOnly set to true',
     default: false,
   })
   .demandCommand(2).argv;

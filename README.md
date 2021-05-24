@@ -31,8 +31,15 @@ Usage: diffof [options] [prevFilePath] [nextFilePath]
 Options:
   --help               Show help                                       [boolean]
   --version            Show version number                             [boolean]
-  --cp, --client-port  Client's port                                    [number]
-  --sp, --server-port  Servers's port                                   [number]
+  --cp, --client-port  Client's port                    [number] [default: 3000]
+  --sp, --server-port  Server's port                    [number] [default: 3001]
+  --uk, --unique-key   Unique identifier of each document in the collection for
+                       pairing between prev collection and next collection
+                                                        [string] [default: "id"]
+  --arraysByIndexOnly  Compares arrays by its indexes, order matters. If set to
+                       false, will try to compare by values. If values are
+                       complex types, will fallback to arraysByIndexOnly set to
+                       true                                     [default: false]
 ```
 
 ### Debugging
