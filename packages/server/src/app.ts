@@ -4,11 +4,13 @@ import cors from "cors";
 import DocumentDiffStrategy from "./diffStrategies/DocumentDiffStrategy";
 import { resetParagraphIds } from "./classes/DiffParagraphBuilder";
 import { GraphBuilder } from "./classes/GraphBuilder";
+import { DocumentDiffOptions } from "./interfaces/DocumentDiffOptions";
 
 export const initApp = (
   port: number,
   prevSource: string,
-  nextSource: string
+  nextSource: string,
+  diffOptions: DocumentDiffOptions // TODO: Make this more general to support different file types
 ): void => {
   const app: express.Application = express();
 
@@ -42,10 +44,7 @@ export const initApp = (
     }
 
     console.log("calculating diffs...");
-    const documentsDiffStrategy = new DocumentDiffStrategy({
-      uniqueKey: "id",
-      arraysByIndexOnly: false,
-    });
+    const documentsDiffStrategy = new DocumentDiffStrategy(diffOptions);
 
     const prev = await (await import(prevSource)).default;
     const next = await (await import(nextSource)).default;

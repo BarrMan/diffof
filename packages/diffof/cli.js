@@ -1,23 +1,45 @@
 #!/usr/bin/env node
-const fs = require('fs');
-const path = require('path');
-const yargs = require('yargs');
-const { hideBin } = require('yargs/helpers');
-const { initApp } = require('@barrman/diffof-server/dist/app');
-const { serverPort: defaultServerPort, clientPort: defaultClientPort } = require("@barrman/diffof-common");
-const { serveClient } = require('@barrman/diffof-client/server');
+const fs = require("fs");
+const path = require("path");
+const yargs = require("yargs");
+const { hideBin } = require("yargs/helpers");
+const { initApp } = require("@barrman/diffof-server/dist/app");
+const {
+  serverPort: defaultServerPort,
+  clientPort: defaultClientPort,
+} = require("@barrman/diffof-common");
+const { serveClient } = require("@barrman/diffof-client/server");
 
 const argv = yargs(hideBin(process.argv))
- .usage("Usage: diffof [options] [prevFilePath] [nextFilePath]")
- .option("cp", { alias: "client-port", describe: `Client's port (default: ${defaultClientPort})`, type: "number" })
- .option("sp", { alias: "server-port", describe: `Servers's port (default: ${defaultServerPort})`, type: "number" })
- .demandCommand(2)
- .argv;
+  .usage("Usage: diffof [options] [prevFilePath] [nextFilePath]")
+  .option("cp", {
+    alias: "client-port",
+    describe: `Client's port (default: ${defaultClientPort})`,
+    type: "number",
+  })
+  .option("sp", {
+    alias: "server-port",
+    describe: `Servers's port (default: ${defaultServerPort})`,
+    type: "number",
+  })
+  .option("uk", {
+    alias: "unique-key",
+    describe:
+      'Unique identifier of each document in the collection for pairing between prev collection and next collection (default: "id")',
+    type: "string",
+    default: "id",
+  })
+  .option("arraysByIndexOnly", {
+    describe:
+      'Compares arrays by its indexes, order matters. If set to false, will try to compare by values. If values are complex types, will fallback to arraysByIndexOnly set to true (default: "false")',
+    default: false,
+  })
+  .demandCommand(2).argv;
 
 const [prev, next] = argv._;
 const clientPort = argv.cp || defaultClientPort;
 
-initApp(argv.sp || defaultServerPort, path.resolve(prev), path.resolve(next));
+initApp(argv.sp || defaultServerPort, path.resolve(prev), path.resolve(next), argv);
 
 serveClient(clientPort);
 

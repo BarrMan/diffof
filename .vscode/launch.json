@@ -7,6 +7,18 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Debug CLI",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/packages/diffof/cli.js",
+            "args": ["fileA.json", "fileB.json"],
+            "protocol": "inspector",
+            "cwd": "${workspaceFolder}",
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Debug server",
             "skipFiles": [
                 "<node_internals>/**"
