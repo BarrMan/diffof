@@ -43,7 +43,7 @@ export const initApp = (
       throw new Error(`toIndex can't be less than fromIndex`);
     }
 
-    console.log("calculating diffs with options", diffOptions);
+    console.log("calculating diffs with options:", diffOptions);
     const documentsDiffStrategy = new DocumentDiffStrategy(diffOptions);
 
     const prev = await (await import(prevSource)).default;

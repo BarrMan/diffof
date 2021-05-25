@@ -1,0 +1,5 @@
+[
+{ "_id" : { "$oid" : "5c1a57e5489b234ed440f67b" }, "varType" : "default", "niSiteId" : 251, "boostSiteId" : 251, "siteId" : { "$oid" : "5a8007577dce0a00014ed216" }, "url" : "/car-loans/reviews/innovative-funding-services", "context" : { "url" : null, "productId" : null, "pageTypeId" : null, "typeOfPage" : "410", "entityId" : null, "segmentId" : null, "verticalId" : null, "siteId" : null, "baseLinkId" : null, "entityType" : null, "tab" : null }, "redirect" : { "redirectUrl" : null }, "isArchived" : true, "httpStatusCode" : 410 },
+{ "_id" : { "$oid" : "5c1a57e5489b234ed440f687" }, "url" : "/ccp/reviews/national-processing", "context" : { "siteId" : { "$oid" : "5a8007577dce0a00014ed216" }, "typeOfPage" : "review", "entityId" : { "$oid" : "5bc88ab799e4ab554fdabe00" }, "entityType" : "product", "verticalId" : { "$oid" : "5b3f29ece84497426256d3ae" }, "segmentId" : { "$oid" : "5b3f2a38d592683824c24a0f" } }, "siteId" : { "$oid" : "5a8007577dce0a00014ed216" }, "varType" : "default", "boostSiteId" : 251, "niSiteId" : 251, "language" : "en", "redirect" : { "redirectUrl" : "/merchant-services/reviews/national-processing" } }
+
+]
