@@ -23,7 +23,7 @@ JSON
 ### CLI
 
 1. Install this package globally: `npm i -g diffof`
-2. `diffof file1.txt file2.txt`
+2. `diffof file1.txt file2.txt [options]`
 
 ```
 Usage: diffof [options] [prevFilePath] [nextFilePath]
