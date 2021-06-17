@@ -7,6 +7,7 @@
 - [Supported Types](#supported-types)
 - [Installation](#installation)
 - [CLI](#cli)
+- [Contribution](#contribution)
 - [Debugging](#debugging)
 
 ### Supported Types
