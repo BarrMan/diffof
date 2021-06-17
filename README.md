@@ -14,11 +14,7 @@
 JSON
 
 ### Installation
-
-1. Clone this repo
-2. `npm run bootstrap`
-3. `npm run build`
-4. `npm run start`
+`npm i -g diffof`
 
 ### CLI
 
@@ -41,6 +37,12 @@ Options:
                        complex types, will fallback to arraysByIndexOnly set to
                        true                                     [default: false]
 ```
+
+### Contribution
+1. Clone this repo
+2. `npm run bootstrap`
+3. `npm run build`
+4. `npm run start`
 
 ### Debugging
 #### VSCode
