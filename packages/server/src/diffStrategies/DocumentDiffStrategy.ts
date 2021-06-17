@@ -89,10 +89,8 @@ export default class DocumentDiffStrategy
     const getDiffKind =
       typeof diffKind === "function" ? diffKind : () => diffKind;
 
-    if (!obj) {
-      return diffInfo;
-    } else if (obj instanceof KeyVal) {
-      diffInfo.addLine();
+    if (obj instanceof KeyVal) {
+      diffInfo.addLine(getDiffKind());
       diffInfo.currentParagraph.addPhrase(`${obj.key}: `);
       diffInfo.concat(this.render(diffKind, obj.val));
     } else if (Array.isArray(obj)) {
@@ -127,7 +125,7 @@ export default class DocumentDiffStrategy
       diffInfo.closeParagraph();
       diffInfo.addLine(getDiffKind()).addPhrase(new StringPhrase("}"));
     } else {
-      diffInfo.addLine(getDiffKind()).addPhrase(new ValuePhrase(obj));
+      diffInfo.addPhrase(new ValuePhrase(obj, getDiffKind()));
     }
 
     return diffInfo;

@@ -10,7 +10,7 @@ export interface IParagraph {
 
   graphId: string;
 
-  currentLine: IDiffLine;
+  currentLine: DiffLineBuilder;
 
   indent: number;
 

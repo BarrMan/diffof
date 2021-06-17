@@ -42,7 +42,7 @@ const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine
 
   const renderPhrases = (phrases) =>
     phrases
-      .filter((phrase) => (typeof phrase.diffKind === 'number' ? renderDiffPhrase[sectionType][phrase.diffKind] : true))
+      .filter((phrase) => (phrase.diffKind === 'number' ? renderDiffPhrase[sectionType][phrase.diffKind] : true))
       .map((diffPhrase) => {
         const phraseDiffClass = getDiffClass(diffPhrase.diffKind);
         const phraseText = diffPhrase.isSymbol ? phraseSymbols[diffPhrase.phrase]() : diffPhrase.phrase;
@@ -67,9 +67,10 @@ const DiffSection = ({ classes, docs, sectionType, selectedLine, setSelectedLine
 
           lineCount++;
           const currentLineCount = lineCount - 1;
-          const shouldRenderLine = paragraphContent.diffKind
-            ? renderDiffPhrase[sectionType][paragraphContent.diffKind]
-            : true;
+          const shouldRenderLine =
+            typeof paragraphContent.diffKind === 'number'
+              ? renderDiffPhrase[sectionType][paragraphContent.diffKind]
+              : true;
 
           return (
             <div
