@@ -32,7 +32,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0"
   },
-  "gitHead": "fb298ab0c6b4bc662d2cc5b334fada110ec0baef",
+  "gitHead": "894d5ee5d0905af20640d287d81722cc47dcf996",
   "publishConfig": {
     "access": "public"
   },

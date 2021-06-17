@@ -17,5 +17,5 @@
     "@barrman/diffof-server": "^4.0.0",
     "yargs": "^16.2.0"
   },
-  "gitHead": "32f91960695bc53da14f9012829077ad50e1fd85"
+  "gitHead": "894d5ee5d0905af20640d287d81722cc47dcf996"
 }
