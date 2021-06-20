@@ -1,16 +1,16 @@
 /* eslint-disable no-restricted-globals */
 import express, { Request, Response } from "express";
 import cors from "cors";
-import DocumentDiffStrategy from "./diffStrategies/DocumentDiffStrategy";
 import { resetParagraphIds } from "./classes/DiffParagraphBuilder";
 import { GraphBuilder } from "./classes/GraphBuilder";
 import { DocumentDiffOptions } from "./interfaces/DocumentDiffOptions";
+import DiffStrategyFactory from "./factories/DiffStrategyFactory";
 
 export const initApp = (
   port: number,
   prevSource: string,
   nextSource: string,
-  diffOptions: DocumentDiffOptions // TODO: Make this more general to support different file types
+  diffOptions: any
 ): void => {
   const app: express.Application = express();
 
@@ -43,24 +43,27 @@ export const initApp = (
       throw new Error(`toIndex can't be less than fromIndex`);
     }
 
-    console.log("calculating diffs with options:", diffOptions);
-    const documentsDiffStrategy = new DocumentDiffStrategy(diffOptions);
+    try {
+      console.log("calculating diffs with options:", diffOptions);
 
-    const prev = await (await import(prevSource)).default;
-    const next = await (await import(nextSource)).default;
+      const diffResult = await DiffStrategyFactory.getInstance().evaluateDiffs(
+        diffOptions,
+        prevSource,
+        nextSource
+      );
 
-    const diffPairs = documentsDiffStrategy.getDiffPairs(prev, next);
-    const diffRes = documentsDiffStrategy.getDiffs(diffPairs);
+      console.log("done calculating diffs...");
 
-    await GraphBuilder.commit();
-    console.log("done calculating diffs...", diffRes);
+      const data = {
+        documentDiffs: diffResult.diffs,
+        totalDocuments: diffResult.diffPairs.length,
+      };
+      await GraphBuilder.commit();
 
-    const data = {
-      documentDiffs: diffRes,
-      totalDocuments: diffPairs.length,
-    };
-
-    res.json(data);
+      res.json(data);
+    } catch (e) {
+      console.error(e);
+    }
   });
 
   app.listen(port);

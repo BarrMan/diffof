@@ -10,7 +10,7 @@ import DiffKind from "../interfaces/DiffKind";
 
 import IDiffInfo from "../interfaces/IDiffInfo";
 import IDiffState from "../interfaces/IDiffState";
-import DiffStrategy from "./DiffStrategy";
+import DiffStrategy from "../interfaces/DiffStrategy";
 import { isPrimitiveType } from "../classes/isPrimitiveType";
 import { DocumentDiffOptions } from "../interfaces/DocumentDiffOptions";
 import { KeyVal } from "../classes/KeyVal";
@@ -19,10 +19,10 @@ import { IParagraph } from "src/interfaces/IParagraph";
 import { IDiffLine } from "src/interfaces/IDiffLine";
 
 type DocumentType = Record<string, unknown>;
+
 export default class DocumentDiffStrategy
   implements DiffStrategy<DocumentType, IDiffInfo, DocumentDiffOptions> {
   constructor(private diffOptions: DocumentDiffOptions) {}
-
   getDiffPairs = (
     prevCollection: DocumentType[],
     nextCollection: DocumentType[]
@@ -47,30 +47,6 @@ export default class DocumentDiffStrategy
           }))
       );
   };
-
-  private cleanParagraphCircularDependencies(paragraph: IParagraph) {
-    delete paragraph.parent;
-    delete paragraph.currentLine;
-    paragraph.content.forEach((content: IParagraph | IDiffLine) => {
-      if (content instanceof DiffParagraphBuilder) {
-        delete content.parent;
-
-        this.cleanParagraphCircularDependencies(content);
-      }
-    });
-  }
-
-  private cleanCircularDependencies(diffInfos: IDiffInfo[]) {
-    diffInfos.forEach((diffInfo) => {
-      diffInfo.paragraphs.forEach((paragraph) =>
-        this.cleanParagraphCircularDependencies(paragraph)
-      );
-      delete diffInfo.currentParagraph;
-      delete diffInfo.stackPreviousLine;
-    });
-
-    return diffInfos;
-  }
 
   getDiffs = (diffStates: IDiffState<DocumentType>[]): IDiffInfo[] => {
     const diffs = diffStates.map((diffState) => {
@@ -143,7 +119,6 @@ export default class DocumentDiffStrategy
       Array.isArray(prev) !== Array.isArray(next)
     ) {
       // unmatches types
-      console.log("unmatched type");
       diffInfo.concat(this.render(DiffKind.REMOVED, prev));
       diffInfo.concat(this.render(DiffKind.ADDED, next));
     } else {
@@ -199,7 +174,6 @@ export default class DocumentDiffStrategy
       } else if (isObject(prev) && isObject(next)) {
         diffInfo.addLine().addPhrase("{");
         diffInfo.currentParagraph.addParagraph(new DiffParagraphBuilder(1));
-        console.log("Opened paragraph");
         diffInfo.currentParagraph.debug();
         Object.entries(prev).forEach(([prevKey, prevVal]) => {
           if (!(prevKey in next)) {
@@ -237,7 +211,6 @@ export default class DocumentDiffStrategy
       }
     }
 
-    console.log("done evaluting");
     diffInfo.currentParagraph.debug();
 
     return diffInfo;
@@ -305,5 +278,29 @@ export default class DocumentDiffStrategy
     return diffInfo;
   };
 
-  fileMask = "json";
+  private cleanParagraphCircularDependencies(paragraph: IParagraph) {
+    delete paragraph.parent;
+    delete paragraph.currentLine;
+    paragraph.content.forEach((content: IParagraph | IDiffLine) => {
+      if (content instanceof DiffParagraphBuilder) {
+        delete content.parent;
+
+        this.cleanParagraphCircularDependencies(content);
+      }
+    });
+  }
+
+  private cleanCircularDependencies(diffInfos: IDiffInfo[]) {
+    diffInfos.forEach((diffInfo) => {
+      diffInfo.paragraphs.forEach((paragraph) =>
+        this.cleanParagraphCircularDependencies(paragraph)
+      );
+      delete diffInfo.currentParagraph;
+      delete diffInfo.stackPreviousLine;
+    });
+
+    return diffInfos;
+  }
+
+  fileMask = /\.json$/;
 }
