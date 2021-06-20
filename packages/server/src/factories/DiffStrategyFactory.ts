@@ -13,7 +13,7 @@ export interface DiffEvaluationResult {
   diffs: any[];
 }
 
-declare type AnyDiffStrategy = DiffStrategy<any, any, any>;
+declare type AnyDiffStrategy = DiffStrategy<unknown, any, unknown>;
 
 export default class DiffStrategyFactory {
   private static instance: DiffStrategyFactory;
