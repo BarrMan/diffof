@@ -3,7 +3,6 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import { resetParagraphIds } from "./classes/DiffParagraphBuilder";
 import { GraphBuilder } from "./classes/GraphBuilder";
-import { DocumentDiffOptions } from "./interfaces/DocumentDiffOptions";
 import DiffStrategyFactory from "./factories/DiffStrategyFactory";
 
 export const initApp = (
