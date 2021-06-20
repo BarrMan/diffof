@@ -1,22 +1,24 @@
 import DiffInfo from "./IDiffInfo";
 import IDiffState from "./IDiffState";
 
-export interface DiffStrategyConstructor {
-  new (diffOptions: any): DiffStrategy<any, any, any>;
-}
+export type DiffStrategyConstructor = new (diffOptions: any) => DiffStrategy<
+  any,
+  any,
+  any
+>;
 
 export default interface DiffStrategy<
-  FileFormatType,
-  DiffInfoExtension extends DiffInfo,
-  DiffOptions
+  TFileFormatType,
+  TDiffInfoExtension extends DiffInfo,
+  TDiffOptions
 > {
   fileMask: RegExp;
 
   getDiffPairs: (
-    prev: FileFormatType[],
-    next: FileFormatType[],
-    diffOptions: DiffOptions
-  ) => IDiffState<FileFormatType>[];
+    prev: TFileFormatType[],
+    next: TFileFormatType[],
+    diffOptions: TDiffOptions
+  ) => IDiffState<TFileFormatType>[];
 
-  getDiffs: (diffStates: IDiffState<FileFormatType>[]) => DiffInfoExtension[];
+  getDiffs: (diffStates: IDiffState<TFileFormatType>[]) => TDiffInfoExtension[];
 }

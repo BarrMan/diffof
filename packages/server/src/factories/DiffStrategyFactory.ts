@@ -29,6 +29,8 @@ export default class DiffStrategyFactory {
     return DiffStrategyFactory.instance;
   }
 
+  private loadModule = async (path) => (await import(path)).default;
+
   private async loadAllDiffStrategies(
     diffOptions: any
   ): Promise<AnyDiffStrategy[]> {
@@ -41,11 +43,11 @@ export default class DiffStrategyFactory {
 
     const diffStrategies = await Promise.all(
       diffStrategyFiles.map(async (diffStrategyFile) => {
-        const strategy = (
-          await import(path.join(strategiesPath, diffStrategyFile))
-        ).default as DiffStrategyConstructor;
+        const strategyClass = (await this.loadModule(
+          path.join(strategiesPath, diffStrategyFile)
+        )) as DiffStrategyConstructor;
 
-        return new strategy(diffOptions) as AnyDiffStrategy;
+        return new strategyClass(diffOptions);
       })
     );
 

@@ -1,6 +1,9 @@
 [
     {
         "uniqueKey": 1,
+        "nestedUniqueKey": {
+            "a": 1
+        },
         "a": 1,
         "b": 2,
         "nested": {
@@ -12,6 +15,9 @@
     },
     {
         "uniqueKey": 3,
+        "nestedUniqueKey": {
+            "a": 3
+        },
         "a": 1,
         "b": 2,
         "nested": {
